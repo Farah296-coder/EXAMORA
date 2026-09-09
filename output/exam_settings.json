@@ -1,0 +1,23 @@
+{
+  "num_questions": 10,
+  "question_types": [
+    "MCQ"
+  ],
+  "difficulty_levels": [
+    "Hard"
+  ],
+  "topics": [
+    {
+      "topic": "oop",
+      "learning_objectives": [
+        "Understand classes and objects"
+      ]
+    },
+    {
+      "topic": "data structures",
+      "learning_objectives": [
+        "Understand arrays and linked lists"
+      ]
+    }
+  ]
+}
