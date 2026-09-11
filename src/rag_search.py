@@ -71,6 +71,21 @@ def get_source_pages(results):
 
     return pages
 
+def retrieve_for_question(topic, learning_objective="", top_k=3):
+    results = search_question(
+        topic=topic,
+        learning_objective=learning_objective,
+        top_k=top_k
+    )
+
+    context = build_context(results)
+    source_pages = get_source_pages(results)
+
+    return {
+        "context": context,
+        "source_pages": source_pages
+    }
+
 def print_results(results):
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
