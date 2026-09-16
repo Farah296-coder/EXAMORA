@@ -1,0 +1,20 @@
+{
+  "questions": [
+    {
+      "question": "What is the primary objective of using generic classes in programming?",
+      "question_type": "MCQ",
+      "topic": null,
+      "quality_score": 89,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 80,
+        "objective": 85,
+        "clarity": 92,
+        "distractors": 100
+      },
+      "feedback": "Clear, directly tests understanding of generics; basic difficulty.",
+      "distractor_issues": []
+    }
+  ],
+  "duplicates": []
+}

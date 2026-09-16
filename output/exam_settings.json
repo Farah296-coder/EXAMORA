@@ -4,19 +4,19 @@
     "MCQ"
   ],
   "difficulty_levels": [
-    "Hard"
+    "Medium"
   ],
   "topics": [
     {
       "topic": "oop",
       "learning_objectives": [
-        "Understand classes and objects"
+        "explain the stack"
       ]
     },
     {
       "topic": "data structures",
       "learning_objectives": [
-        "Understand arrays and linked lists"
+        "explain the stack"
       ]
     }
   ]
