@@ -1,0 +1,19 @@
+{
+  "total_questions": 10,
+  "blueprint": [
+    {
+      "topic": "oop",
+      "learning_objective": "Understand classes and objects",
+      "question_type": "MCQ",
+      "difficulty": "Hard",
+      "count": 5
+    },
+    {
+      "topic": "data structures",
+      "learning_objective": "Understand arrays and linked lists",
+      "question_type": "MCQ",
+      "difficulty": "Hard",
+      "count": 5
+    }
+  ]
+}
