@@ -1,0 +1,14 @@
+[
+  {
+    "question_type": "MCQ",
+    "question": "What is the primary objective of using generic classes in programming?",
+    "correct_answer": "To allow code reuse with different data types",
+    "choices": [
+      "To allow code reuse with different data types",
+      "To restrict class usage to a single data type",
+      "To increase compile-time errors",
+      "To enforce runtime type checking"
+    ],
+    "source_page": 3
+  }
+]

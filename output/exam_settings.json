@@ -1,0 +1,23 @@
+{
+  "num_questions": 10,
+  "question_types": [
+    "MCQ"
+  ],
+  "difficulty_levels": [
+    "Medium"
+  ],
+  "topics": [
+    {
+      "topic": "oop",
+      "learning_objectives": [
+        "explain the stack"
+      ]
+    },
+    {
+      "topic": "data structures",
+      "learning_objectives": [
+        "explain the stack"
+      ]
+    }
+  ]
+}
