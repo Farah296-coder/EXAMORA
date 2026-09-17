@@ -881,6 +881,44 @@ def render_approval():
                 mime="application/json",
                 width="stretch",
             )
+            st.write("")
+            render_database_section(approved)
+
+
+def run_save_to_database(title, publish):
+    import database
+
+    with st.spinner("Saving the exam to the database..."):
+        try:
+            exam = database.import_approved_exam(path=APPROVED_PATH, title=title)
+            if publish:
+                exam = database.publish_exam(exam["id"])
+        except Exception as e:
+            flash("error", f"Saving to the database failed: {e}")
+        else:
+            exam["share_url"] = database.share_link(exam)
+            st.session_state.saved_exam = exam
+            flash("success", f"Exam saved to the database with id {exam['id']}.")
+    st.rerun()
+
+
+def render_database_section(approved):
+    st.markdown("**Save to the exam database**")
+    default_title = f"Exam - {approved['total_questions']} questions"
+    title = st.text_input("Exam title", value=default_title, key="db_exam_title")
+
+    save_col, publish_col = st.columns(2)
+    if save_col.button("💾 Save as draft", key="db_save", width="stretch", disabled=not title.strip()):
+        run_save_to_database(title.strip(), publish=False)
+    if publish_col.button("🔗 Save & publish", key="db_publish", type="primary", width="stretch", disabled=not title.strip()):
+        run_save_to_database(title.strip(), publish=True)
+
+    saved = st.session_state.get("saved_exam")
+    if saved:
+        st.info(f"Exam **{saved['title']}** — id {saved['id']}, status: {saved['status']}")
+        if saved.get("share_url"):
+            st.caption("Student share link")
+            st.code(saved["share_url"], language="text")
 
 
 def render_sidebar():
