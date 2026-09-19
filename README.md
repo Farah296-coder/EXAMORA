@@ -1,254 +1,520 @@
-# Prompt + Question Generation
 
-This module covers the **Prompt + Question Generation** part of the pipeline: turning retrieved context into a structured, ready-to-use exam question.
+# EXAMORA
 
-## Where it fits in the pipeline
+An AI-powered platform that transforms educational PDFs into customizable, high-quality exams.
 
-## File
+The platform helps teachers upload course materials, generate questions automatically, evaluate their quality, and review and edit exams before using them with students.
 
-- `src/question_generator.py`
+---
 
-## Setup
+## Project Overview
 
-Install dependencies:
+**EXAMORA is an AI-powered educational platform that uses LLMs, RAG, embeddings, and automated evaluation** to understand PDF content and generate exams based on the teacher's requirements.
 
-```bash
-pip install openai chromadb sentence-transformers pymupdf
+### Main Flow
+
+```text
+Teacher uploads PDF
+        ↓
+AI analyzes the content
+        ↓
+Content retrieval + source references
+        ↓
+Teacher selects exam settings
+        ↓
+AI generates questions
+        ↓
+AI evaluates question quality
+        ↓
+Teacher reviews & edits
+        ↓
+Teacher Version / Student Version
 ```
 
-This module uses **Groq** (free, OpenAI-compatible API) as the LLM provider. You'll need a free API key from [console.groq.com/keys](https://console.groq.com/keys).
+---
 
-Set it as an environment variable:
+#  Core Features
 
-```bash
-# macOS / Linux
-export GROQ_API_KEY="gsk_..."
+##  PDF Understanding
 
-# Windows (PowerShell / cmd)
-setx GROQ_API_KEY "gsk_..."
+* Upload educational PDFs
+* Extract text from the document
+* Preserve page numbers
+* Divide content into searchable chunks
+* Retrieve relevant content when generating questions
+* Provide source/page references for generated questions
+
+---
+
+##  AI Question Generation
+
+Generate multiple types of questions, including:
+
+* Multiple Choice Questions (MCQ)
+* True / False
+* Short Answer
+* Other question types can be added later
+
+Questions can be generated according to:
+
+* Number of questions
+* Question type
+* Difficulty
+* Exam Blueprint
+* Source/Page References
+
+---
+
+##  Smart Exam Generation
+
+Teachers can control the structure of the generated exam.
+
+### Exam Settings
+
+| Setting             | Description                                   |
+| ------------------- | --------------------------------------------- |
+| Number of Questions | Defines the total number of questions         |
+| Question Types      | MCQ, True/False, Short Answer, etc.           |
+| Difficulty          | Easy, Medium, Hard                            |
+| Exam Blueprint      | Defines the desired distribution of questions |
+| Source References   | Keeps track of the PDF pages used             |
+
+---
+
+#  Quality & Validation
+
+The system goes beyond simple question generation by automatically evaluating generated questions.
+
+### AI Quality Score
+
+The quality score considers factors such as:
+
+* Relevance
+* Difficulty
+* Clarity
+* Correctness
+* Distractor Quality
+* Grounding in the source material
+
+### Additional Quality Features
+
+* Duplicate Question Detection
+* Question Validation
+* AI Critic
+* Smart Regeneration
+* Difficulty Adjustment
+* Question Type Conversion
+
+### Evaluation Flow
+
+```text
+Generated Question
+       ↓
+Quality Evaluation
+       ↓
+ ┌───────────────┐
+ │   Valid?      │
+ └───────┬───────┘
+         │
+    Yes  │  No
+         │
+         ↓
+     Keep Question
+              or
+       Smart Regeneration
 ```
 
-> Model in use: `openai/gpt-oss-20b`.
+---
 
-## How it works
+#  Exam Editor
 
-| Function | What it does |
-|---|---|
-| `build_prompt(context, question_type, topic_hint)` | Builds the instruction prompt sent to the LLM, embedding the retrieved context and specifying the exact JSON shape expected back. |
-| `call_llm(prompt)` | Sends the prompt to Groq and returns the raw text response. |
-| `parse_llm_response(raw_output, question_type, source_page)` | Parses the LLM's response into a fixed dict structure. Raises a clear error if the LLM didn't return valid JSON. |
-| `generate_question(context, question_type, source_page, topic_hint)` | Runs the full pipeline for one piece of context: prompt → LLM → parsed output. |
-| `generate_from_topic(topic, question_type, top_k)` | Same as above, but pulls the context automatically from Habiba's `rag_search.search_question()` given just a topic string. |
-| `generate_quiz(requests)` | Generates multiple questions at once from a list of `{topic, question_type}` requests. Skips and logs any individual question that fails instead of crashing the whole batch. |
-| `save_quiz(quiz, path)` | Saves a generated quiz to a JSON file for handoff. |
+Teachers can review and modify the generated exam before using it.
 
-Supported question types: `MCQ`, `True-False`, `Short Answer`.
+### Supported Editing Operations
 
-## Example usage
+* Edit Question
+* Edit Answer
+* Edit Distractors
+* Change Difficulty
+* Change Question Type
+* Regenerate Question
 
-Generate one question:
+---
 
-```python
-from question_generator import generate_from_topic
+#  Teacher & Student Experience
 
-question = generate_from_topic("generic classes and methods", "MCQ")
-print(question)
+The platform supports two different versions of the exam.
+
+### Teacher Version
+
+Contains:
+
+* Questions
+* Correct Answers
+* Source/Page References
+* Difficulty
+* Quality Score
+* Editing Controls
+
+### Student Version
+
+Contains:
+
+* Questions
+* Answer Choices
+* Student Answer Input
+
+Students do not see teacher-only information such as correct answers or internal quality scores.
+
+---
+
+#  Development Phases
+
+## Phase 1 — AI Core
+
+### Goal
+
+Make the AI understand PDF content and generate questions from it.
+
+### Components
+
+#### Farah — PDF Processing
+
+* PDF upload/processing
+* Text extraction
+* Page number preservation
+* Document chunking
+
+#### Habiba — RAG / Embeddings
+
+* Embedding generation
+* Vector storage
+* Semantic retrieval
+* Relevant context retrieval
+* Source/page references
+
+#### Hend — Prompting & Question Generation
+
+* Prompt engineering
+* Question generation
+* MCQ generation
+* True/False generation
+* Short Answer generation
+
+#### Nima — AI Evaluation
+
+* Question correctness
+* Content relevance
+* Question suitability
+* Answer validation
+
+---
+
+# Phase 2 — Smart Exam
+
+### Goal
+
+Allow teachers to define the exam structure and let the AI generate the exam accordingly.
+
+### Features
+
+* Number of Questions
+* Question Types
+* Difficulty
+* Exam Blueprint
+* Page/Source References
+
+### Team Responsibilities
+
+| Member | Responsibility                     |
+| ------ | ---------------------------------- |
+| Habiba | Retrieval + Source/Page References |
+| Nima   | Question Generation                |
+| Farah  | Exam Blueprint                     |
+| Hend   | Exam Settings UI                   |
+
+---
+
+# Phase 3 — Quality + Editing
+
+### Goal
+
+Make the system more than a basic question generator.
+
+### Features
+
+* AI Quality Score
+* Duplicate Detection
+* Question Validation
+* Smart Regeneration
+* Edit Question
+* Change Difficulty
+* Change Question Type
+* Add Question
+* Delete Question
+* Reorder Questions
+
+### Team Responsibilities
+
+| Member | Responsibility                      |
+| ------ | ----------------------------------- |
+| Nima   | Grounding + Correctness             |
+| Farah  | AI Critic + Regeneration            |
+| Hend   | Quality Score + Duplicate Detection |
+| Habiba | Exam Editor UI                      |
+
+---
+
+# Phase 4 — Teacher → Student
+
+### Goal
+
+Build the complete teacher-to-student experience for the generated exam.
+
+### Final System
+
+```text
+PDF Upload
+    ↓
+AI Analysis
+    ↓
+Teacher Settings
+    ↓
+Exam Generation
+    ↓
+Quality Evaluation
+    ↓
+Review & Edit
+    ↓
+Teacher Version / Student Version
+    ↓
+Student Exam Interface
 ```
 
-Generate a full quiz and save it:
+During this phase, the whole team contributes to:
 
-```python
-from question_generator import generate_quiz, save_quiz
+* AI Integration
+* Backend
+* Frontend
+* Database
+* APIs
+* Authentication
+* Exam Management
+* Student Exam Interface
 
-quiz_requests = [
-    {"topic": "generic classes", "question_type": "MCQ"},
-    {"topic": "generic classes", "question_type": "True-False"},
-    {"topic": "generic methods", "question_type": "Short Answer"},
-]
+---
 
-quiz = generate_quiz(quiz_requests)
-save_quiz(quiz)  # -> output/generated_quiz.json
+# Suggested System Architecture
+
+```text
+                    ┌──────────────────┐
+                    │     Teacher      │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │   Web Frontend   │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │    Backend API   │
+                    └────────┬─────────┘
+                             │
+             ┌───────────────┼────────────────┐
+             │               │                │
+             ▼               ▼                ▼
+      ┌────────────┐  ┌─────────────┐  ┌─────────────┐
+      │ PDF Service│  │ AI Service  │  │  Database   │
+      └─────┬──────┘  └──────┬──────┘  └─────────────┘
+            │                │
+            ▼                ▼
+      ┌────────────┐  ┌─────────────┐
+      │ Text +     │  │ RAG /       │
+      │ Page Data  │  │ Embeddings  │
+      └────────────┘  └──────┬──────┘
+                              │
+                              ▼
+                       ┌─────────────┐
+                       │   Question  │
+                       │  Generator  │
+                       └──────┬──────┘
+                              │
+                              ▼
+                       ┌─────────────┐
+                       │ AI Critic / │
+                       │ Evaluation  │
+                       └──────┬──────┘
+                              │
+                              ▼
+                       ┌─────────────┐
+                       │ Exam Editor │
+                       └──────┬──────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │ Teacher / Student│
+                    │    Exam View     │
+                    └──────────────────┘
 ```
 
-## Output format
+---
 
-Every generated question follows this structure:
+# Key AI Pipeline
 
-**MCQ**
-```json
-{
-  "question_type": "MCQ",
-  "question": "What is a generic class?",
-  "choices": ["...", "...", "...", "..."],
-  "correct_answer": "...",
-  "source_page": 2
-}
+```text
+PDF
+ ↓
+Text Extraction
+ ↓
+Chunking + Page Metadata
+ ↓
+Embeddings
+ ↓
+Vector Database
+ ↓
+RAG Retrieval
+ ↓
+Prompt Construction
+ ↓
+Question Generation
+ ↓
+Question Validation
+ ↓
+Quality Evaluation
+ ↓
+Smart Regeneration
+ ↓
+Final Exam
 ```
 
-**True-False**
-```json
-{
-  "question_type": "True-False",
-  "question": "Generics provide compile-time type safety.",
-  "choices": ["True", "False"],
-  "correct_answer": "True",
-  "source_page": 2
-}
+---
+
+# Source Grounding
+
+Every generated question should ideally be connected to the content that supports it.
+
+Example:
+
+```text
+Question:
+What is the primary function of mitochondria?
+
+Answer:
+ATP production through cellular respiration.
+
+Source:
+Biology.pdf — Page 12
 ```
 
-**Short Answer**
-```json
-{
-  "question_type": "Short Answer",
-  "question": "What do generics allow a class to operate on?",
-  "correct_answer": "Objects of various types",
-  "source_page": 2
-}
-```
+This allows teachers to verify where the question came from and helps reduce unsupported AI-generated content.
 
-## Notes
+---
 
-- `correct_answer` for MCQ/True-False always matches one of the entries in `choices` exactly, so it can be used directly for automated grading.
-- Groq's free tier has rate limits — if you hit a `rate_limit_exceeded` error while batch-generating a quiz, wait a bit and retry.
+# Technology Stack
 
+The exact technologies can be selected during implementation, but the system can be organized into:
 
+### Frontend
 
+* Modern web framework
+* Responsive UI
+* Teacher Dashboard
+* Exam Settings
+* Exam Editor
+* Student Exam Interface
 
+### Backend
 
-# Phase 4 — AI Integration + APIs
+* REST API or equivalent
+* Authentication
+* PDF processing
+* Exam generation
+* Exam management
+* Database integration
 
-## Overview
+### AI Layer
 
-Phase 4 integrates the existing AI pipeline with a FastAPI backend and provides API endpoints that can be used by the frontend.
+* LLM
+* Prompt Engineering
+* Embeddings
+* RAG
+* AI Evaluation
+* Duplicate Detection
 
-The main implementation is in:
+### Storage
 
-`src/api.py`
+* Relational Database
+* Vector Database
+* PDF/File Storage
 
-The API layer connects the existing project modules without reimplementing their AI logic.
+---
 
-## What Was Implemented
+# Team
 
-Phase 4 provides the following functionality:
+| Member     | Main Responsibilities                                                   |
+| ---------- | ----------------------------------------------------------------------- |
+| **Farah**  | PDF Processing, Exam Blueprint, AI Critic & Regeneration                |
+| **Habiba** | RAG, Embeddings, Retrieval, Source/Page References, Exam Editor         |
+| **Hend**   | Prompting, Question Generation, UI, Quality Score & Duplicate Detection |
+| **Nima**   | AI Evaluation, Grounding, Correctness, Question Generation              |
 
-- Connects Exam Settings with the AI pipeline.
-- Generates exams through an API endpoint.
-- Connects the Quality Score module.
-- Detects duplicate questions.
-- Validates generated questions against the source material.
-- Supports question regeneration using the AI Critic.
-- Provides a health-check endpoint.
-- Returns a consistent response format for frontend integration.
+> Responsibilities can overlap during Phase 4 as the project becomes a complete full-stack application.
 
-## Connected Modules
+---
 
-`api.py` integrates the following existing modules:
+# Project Goal
 
-- `exam_settings.py`
-- `exam_blueprint.py`
-- `generation.py`
-- `rag_search.py`
-- `quality_score.py`
-- `grounding_validation.py`
-- `ai_critic.py`
+The goal is to build an intelligent exam-generation platform that helps teachers move from:
 
-`api.py` acts as the integration layer between the frontend and these modules.
+**Course Material → Structured Exam → Reviewed Questions → Student-Ready Exam**
 
-## Compatibility Bridge
+with minimal manual effort.
 
-During integration, `generation.py` expected a function called `retrieve_for_question()`, while the existing `rag_search.py` provided `search_question()`.
+Instead of simply generating questions, the system focuses on:
 
-To avoid modifying teammate-owned files, a small compatibility bridge was implemented inside `api.py`.
+**Understanding → Grounding → Generation → Evaluation → Editing**
 
-The bridge uses the existing `search_question()` function and converts its results into the format expected by the generation pipeline.
+---
 
-Therefore, only `api.py` was modified for this integration.
+# Future Work
 
-## API Endpoints
+The following features are planned for future versions of the platform:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/health` | Checks whether the API is running and whether the GROQ API key is available |
-| POST | `/api/exam-settings` | Creates and saves exam settings |
-| POST | `/api/generate-exam` | Runs the AI exam-generation pipeline |
-| POST | `/api/quality-score` | Evaluates the quality of generated questions |
-| POST | `/api/duplicates` | Detects duplicate or highly similar questions |
-| POST | `/api/validate` | Validates questions against the source material |
-| POST | `/api/regenerate` | Regenerates a question when improvement is required |
+###  Online Quiz & Publishing
 
-## API Response Format
+* Publish Quiz
+* Generate Shareable Quiz Links
+* Online Quiz Hosting
+* Student Quiz Submission
+* Automatic Grading
 
-All endpoints follow a consistent response structure.
+###  Student Analytics
 
-Successful response:
+* Student Results
+* Performance Analytics
+* Student Progress Tracking
+* Question-Level Performance Analysis
 
-```json
-{
-  "success": true,
-  "data": {}
-}
+###  Advanced AI Features
 
+* Adaptive Difficulty
+* Personalized Quizzes
+* Automatic Answer Explanations
+* Intelligent Question Recommendations
+* Advanced Question Bank Management
 
-How to Run
+###  Content & Exam Management
 
-From the project root, activate the virtual environment:
+* Multiple PDF Support
+* PowerPoint/Word Import
+* Exam Templates
+* Question History and Versioning
+* Teacher Collaboration
+* Export to PDF/DOCX
+* LMS Integration
 
-source .venv/bin/activate
+---
 
-Make sure the GROQ API key is available:
+##
 
-export GROQ_API_KEY="YOUR_GROQ_API_KEY"
-
-Then verify the API import:
-
-python -c "import sys; sys.path.insert(0, 'src'); import api; print('API IMPORT OK')"
-
-Expected output:
-
-API IMPORT OK
-
-Start the FastAPI server:
-
-uvicorn api:app --app-dir src --reload --port 8000
-Swagger UI
-
-After starting the server, open the following URL in Chrome:
-
-http://127.0.0.1:8000/docs
-
-This opens the Swagger UI, where all API endpoints can be viewed and tested directly from the browser.
-
-For example, the first endpoint to test is:
-
-GET /api/health
-
-Click Try it out → Execute.
-
-A successful response should look like:
-
-{
-  "success": true,
-  "data": {
-    "status": "up",
-    "groq_key_set": true
-  }
-}
-Important Note
-
-http://127.0.0.1:8000/docs is a local URL. It works only while the FastAPI server is running on the current computer.
-
-To access the Swagger UI again:
-
-Activate the virtual environment.
-Set the GROQ API key.
-Start the FastAPI server.
-Open http://127.0.0.1:8000/docs in Chrome.
-Phase 4 Result
-
-Phase 4 provides a working FastAPI layer that exposes the existing AI functionality through frontend-ready APIs.
-
-The final integration connects:
-
-Exam Settings → AI Generation → Quality Score → Duplicate Detection → Validation → Regeneration
-
-and makes the complete AI pipeline accessible through the FastAPI backend.
