@@ -1,4 +1,5 @@
 import chromadb
+import os
 from sentence_transformers import SentenceTransformer
 
 
@@ -7,11 +8,13 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
 # Connect to the existing vector database
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 client = chromadb.PersistentClient(
-    path="vector_db"
+    path=os.path.join(BASE_DIR, "vector_db")
 )
 
-collection = client.get_collection(
+collection = client.get_or_create_collection(
     name="pdf_chunks"
 )
 

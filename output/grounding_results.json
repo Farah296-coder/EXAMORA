@@ -1,114 +1,151 @@
 [
   {
-    "question": "Given a generic class `Box<T extends Comparable<T>>` that implements `Comparable<Box<T>>`, which of the following correctly implements the `compareTo` method so that `Collections.sort` can order a list of `Box` objects based on the natural ordering of their contained values?",
+    "question": "According to the material, which statement best describes the primary purpose of software design patterns?",
     "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "topic": "Software Design Patterns",
+    "learning_objective": null,
     "source_pages": [
+      1,
       3,
-      2,
-      9
+      8,
+      4
     ],
-    "verdict": "Unsupported",
-    "reason": "The source text does not contain any information about a Box class or its compareTo implementation, so the question cannot be verified against the provided source.",
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7737, Requested 896. Please try again in 4.7475s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
     "supported_by_source": false
   },
   {
-    "question": "In the context of Java's Comparable<T> interface, which of the following correctly describes the contract for the compareTo method?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "question": "The primary reference for the course is the book 'Head First Design Patterns, 2nd edition, published by O'Reilly Media in 2020.'",
+    "question_type": "True/False",
+    "topic": "Course References",
+    "learning_objective": null,
     "source_pages": [
-      3,
+      9,
+      12,
       2,
-      9
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract, matching the marked answer.",
+    "reason": "Source lists primary reference exactly as stated.",
     "supported_by_source": true
   },
   {
-    "question": "Which of the following statements correctly describes the contract of the compareTo method in the Comparable<T> interface?",
+    "question": "Which of the following is NOT mentioned as a characteristic of good software design in the provided material?",
     "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "topic": "What is Good Software Design?",
+    "learning_objective": null,
     "source_pages": [
-      3,
-      2,
-      9
+      4,
+      5,
+      1,
+      6
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract and matches the marked answer.",
+    "reason": "Scalable is not listed among characteristics; others are present",
     "supported_by_source": true
   },
   {
-    "question": "When a class implements Comparable<T>, which of the following statements correctly describes the contract of its compareTo method and its impact on usage with Collections methods?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
-    "source_pages": [
-      3,
-      2,
-      9
-    ],
-    "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract and its use with Collections, matching the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "According to the provided information, what is the required behavior of the compareTo method in a class that implements Comparable<T>?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
-    "source_pages": [
-      3,
-      2,
-      9
-    ],
-    "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo method must return zero when objects are equal, a negative integer if the first is less than the second, and a positive integer if the first is greater, matching the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "Which of the following statements about the compareTo method contract is FALSE based on the context?",
-    "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "question": "Good software design aims to make changes with the least possible impact on existing code.",
+    "question_type": "True/False",
+    "topic": "Why Software Design must Handle Change",
+    "learning_objective": null,
     "source_pages": [
       5,
-      2,
-      9
+      6,
+      4,
+      15
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract: zero for equal, negative if first < second, positive if first > second. Thus the statement claiming a positive return when first < second is false, matching the marked answer.",
+    "reason": "Source explicitly states good design aims to minimize impact of changes; true answer matches.",
     "supported_by_source": true
   },
   {
-    "question": "Which statement about Java's generic ArrayList and Comparable interface is true regarding sorting with Collections.sort?",
+    "question": "According to the material, which of the following is NOT listed as a negative effect of poor design on software maintainability?",
     "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "topic": "Maintainability",
+    "learning_objective": null,
     "source_pages": [
-      5,
-      2,
-      9
+      6,
+      4,
+      14,
+      5
     ],
     "verdict": "Correct",
-    "reason": "The source text states that Comparable<T> objects can be used with the sorting methods of class Collections, implying that an ArrayList containing elements that implement Comparable<T> can be sorted. The marked answer reflects this requirement, while the other options are not supported by the text.",
+    "reason": "Improved performance is not mentioned among listed negative effects of poor design",
     "supported_by_source": true
   },
   {
-    "question": "In Java, a class that implements Comparable<T> must provide a compareTo method. Which of the following statements about the compareTo method is accurate?",
-    "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "question": "In the SimUDuck game, the original design used a single superclass named Duck from which all other duck types inherit.",
+    "question_type": "True/False",
+    "topic": "Example: SimUDuck",
+    "learning_objective": null,
     "source_pages": [
-      5,
-      2,
-      9
+      7,
+      9,
+      12,
+      8
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract: return zero for equality, negative if the first is less, positive if the first is greater, which matches the marked answer.",
+    "reason": "Source confirms original design used a single superclass Duck for all duck types; true answer matches.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Which of the following best describes a problem that can arise when using inheritance in object‑oriented design?",
+    "question_type": "MCQ",
+    "topic": "Problems with Inheritance",
+    "learning_objective": null,
+    "source_pages": [
+      10,
+      11,
+      15,
+      8
+    ],
+    "verdict": "Correct",
+    "reason": "Source states subclasses may inherit behavior they should not have, matching the marked answer.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Separating behaviors into independent classes, rather than relying solely on inheritance, helps avoid unwanted inherited behavior.",
+    "question_type": "True/False",
+    "topic": "Reusability",
+    "learning_objective": null,
+    "source_pages": [
+      11,
+      6,
+      2,
+      15
+    ],
+    "verdict": "Correct",
+    "reason": "Source states inheritance can cause unwanted behavior; separating behaviors into independent classes avoids this.",
+    "supported_by_source": true
+  },
+  {
+    "question": "According to the design principles described, how does encapsulating varying behaviors (such as flying and quacking in the SimUDuck example) increase a system's flexibility?",
+    "question_type": "MCQ",
+    "topic": "Flexibility",
+    "learning_objective": null,
+    "source_pages": [
+      13,
+      15,
+      14
+    ],
+    "verdict": "Correct",
+    "reason": "Source states encapsulating varying behaviors allows adding new implementations without modifying Duck, increasing flexibility.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Reducing coupling helps keep changes localized, while high cohesion groups related responsibilities together.",
+    "question_type": "True/False",
+    "topic": "Coupling and Cohesion",
+    "learning_objective": null,
+    "source_pages": [
+      14,
+      15,
+      4,
+      13
+    ],
+    "verdict": "Correct",
+    "reason": "Source defines reducing coupling localizes changes and cohesion groups related responsibilities; matches statement.",
     "supported_by_source": true
   }
 ]

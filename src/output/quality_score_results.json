@@ -1,0 +1,166 @@
+{
+  "questions": [
+    {
+      "question": "A marketing firm wants to segment its customer base into distinct groups where customers within each group have similar purchasing behaviors, and customers from different groups have dissimilar behaviors. Which data mining technique should they employ?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 87,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 60,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly asks for the appropriate data mining technique for customer segmentation, which is clustering.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A marketing analyst wants to segment customers into groups that have similar purchasing patterns in order to target promotions more effectively. Which data mining technique is most appropriate for this task?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 88,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 70,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly asks for the appropriate data mining technique for customer segmentation, aligning with the data mining topic.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following applications is most appropriately addressed using clustering techniques rather than classification techniques?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 89,
+        "clarity": 88,
+        "distractors": 100
+      },
+      "feedback": "The question clearly distinguishes clustering from classification and is appropriate for data mining.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following data mining techniques is primarily used for grouping similar objects together and is not a predictive modeling method?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 85,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 70,
+        "objective": 80,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly asks about a non-predictive data mining technique and correctly identifies clustering as the answer.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following best describes a key feature of description methods in data mining?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 80,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "Clear and relevant. Evaluated against topic mastery.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A supermarket wants to determine which items are frequently purchased together in order to optimize shelf placement and promotional strategies. Which data mining technique should they employ?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 88,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 70,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly asks for the appropriate data mining technique for frequent itemset analysis, which is association rules.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which data mining technique is best suited for grouping customers into segments based on purchasing behavior when no prior labels exist?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly targets unsupervised clustering for customer segmentation, a core data mining concept. Evaluated against topic mastery.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A marketing analyst wants to estimate next quarter's sales based on advertising spend. Which data mining technique should be used?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 89,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 70,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question is clear and relevant to data mining, but no learning objective was provided to assess alignment.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A retail chain wants to identify combinations of products that are frequently purchased together in order to optimize shelf placement. Which data mining technique is best suited for this task?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 80,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "Clear, relevant, but no learning objective specified.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which data mining method is primarily used to discover relationships between items that can be used to predict the occurrence of one item based on others?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 89,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 70,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question is clear and directly relevant to data mining. Evaluated against topic mastery.",
+      "distractor_issues": []
+    }
+  ],
+  "duplicates": [
+    {
+      "question_a": 1,
+      "question_b": 2,
+      "similarity": 0.883
+    },
+    {
+      "question_a": 6,
+      "question_b": 9,
+      "similarity": 0.919
+    }
+  ]
+}

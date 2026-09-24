@@ -1,141 +1,258 @@
-"""
-question_generator.py
-----------------------
-This is Hend's part of the pipeline (Prompt + Question Generation).
-
-Flow:
-    relevant_context (from Habiba's rag_search.py)
-        -> build_prompt()          # build a clear instruction prompt + inject context
-        -> call_llm()              # send prompt to the LLM
-        -> parse_llm_response()    # turn raw LLM text into a fixed JSON structure
-        -> generate_question()     # ties it all together, returns final dict for Nima
-
-Run this file directly to see a demo using a fake/mock context (no API key needed),
-or plug in rag_search.search_question() to use real retrieved context.
-"""
-
 import json
+import time
 import os
+import re
 
-# -----------------------------
-# 1. Config: allowed question types
-# -----------------------------
-
-QUESTION_TYPES = ["MCQ", "True-False", "Short Answer"]
+from openai import OpenAI
 
 
-# -----------------------------
-# 2. Prompt Template Builder
-# -----------------------------
+QUESTION_TYPES = [
+    "MCQ",
+    "True-False",
+    "Short Answer",
+]
 
-def build_prompt(context: str, question_type: str, topic_hint: str = "") -> str:
-    """
-    Builds a clear instruction prompt for the LLM, with the retrieved
-    context embedded inside it, and strict output-format instructions
-    so the LLM's answer is easy to parse later.
-    """
+
+_client = OpenAI(
+    api_key=os.environ["GROQ_API_KEY"],
+    base_url="https://api.groq.com/openai/v1",
+)
+
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
+
+
+def clean_text(value):
+    if not isinstance(value, str):
+        return value
+
+    value = value.strip()
+
+    value = re.sub(
+        r"```(?:html|json|text)?",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    )
+
+    value = value.replace("```", "")
+
+    value = re.sub(
+        r"</?(?:p|div|span|strong|b|em|i|br|ul|ol|li|code|pre)[^>]*>",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    )
+
+    return (
+        value
+        .replace("&nbsp;", " ")
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", '"')
+        .strip()
+    )
+
+def build_prompt(
+    context: str,
+    question_type: str,
+    topic_hint: str = "",
+    difficulty: str = "Medium",
+) -> str:
+
     if question_type not in QUESTION_TYPES:
-        raise ValueError(f"question_type must be one of {QUESTION_TYPES}")
-
-    base_instructions = f"""You are an assistant that writes exam questions for a teacher.
-Use ONLY the information in the CONTEXT below. Do not invent facts that are not in it.
-Question type required: {question_type}
-{"Focus specifically on: " + topic_hint if topic_hint else ""}
-
-Respond with STRICT JSON ONLY (no extra text, no markdown fences), matching exactly
-this shape for the requested question type:
-"""
+        raise ValueError(
+            f"question_type must be one of {QUESTION_TYPES}"
+        )
 
     if question_type == "MCQ":
+
         shape = """{
   "question": "string",
   "choices": ["string", "string", "string", "string"],
-  "correct_answer": "string (must exactly match one of the choices)"
+  "correct_answer": "string"
 }"""
+
     elif question_type == "True-False":
+
         shape = """{
   "question": "string",
   "choices": ["True", "False"],
   "correct_answer": "True or False"
 }"""
-    else:  # Short Answer
+
+    else:
+
         shape = """{
   "question": "string",
-  "correct_answer": "string (a short, direct answer)"
+  "correct_answer": "string"
 }"""
 
-    prompt = f"""{base_instructions}
+    topic_line = (
+        f"Topic area: {topic_hint}"
+        if topic_hint
+        else ""
+    )
+
+    prompt = f"""
+You are an expert educational assessment generator.
+
+Create ONE exam question using ONLY the information in the CONTEXT.
+
+Rules:
+
+- Do not invent information.
+- Do not use HTML.
+- Do not use Markdown.
+- Do not mention the context or PDF.
+- Do not use learning objectives.
+- Do not simply repeat the topic as a question.
+- Prefer testing understanding, application, comparison, behavior,
+  examples, or consequences when the context supports it.
+- Avoid generating the same question repeatedly.
+- Difficulty: {difficulty}
+- Question type: {question_type}
+
+{topic_line}
+
+Return STRICT JSON ONLY.
+
+Required shape:
+
 {shape}
 
 CONTEXT:
 \"\"\"
 {context}
 \"\"\"
+
+Generate exactly ONE question.
 """
+
     return prompt
 
+LLM_ATTEMPTS = 3
+MAX_OUTPUT_TOKENS = 600
 
-# -----------------------------
-# 3. LLM Call
-# -----------------------------
+_fast_mode = True
 
-from openai import OpenAI
 
-# Groq's API is free and OpenAI-compatible, so we just point the OpenAI
-# client at Groq's base_url and use a Groq API key instead.
-_client = OpenAI(
-    api_key=os.environ["GROQ_API_KEY"],
-    base_url="https://api.groq.com/openai/v1",
-)
+def fast_completion(client, messages, temperature, max_tokens=MAX_OUTPUT_TOKENS):
+    global _fast_mode
 
-# Free-tier-accessible model on Groq (Llama models there are now
-# Enterprise-only). GPT-OSS 20B is fast and works well for structured JSON.
-LLM_MODEL = "openai/gpt-oss-20b"
+    if _fast_mode:
+        try:
+            return client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body={"reasoning_effort": "low"},
+            )
+        except Exception as e:
+            text = str(e).lower()
+            if "rate" in text or "429" in text or "timeout" in text:
+                raise
+            _fast_mode = False
+
+    return client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+
+
+def retry_delay(error, attempt):
+    match = re.search(r"try again in ([0-9.]+)s", str(error))
+    if match:
+        try:
+            return min(float(match.group(1)) + 0.5, 25.0)
+        except ValueError:
+            pass
+    return 2.0 * (attempt + 1)
 
 
 def call_llm(prompt: str) -> str:
-    """
-    Sends the prompt to Groq's chat completions endpoint and returns
-    the raw text response (expected to be a JSON string, per the
-    instructions baked into build_prompt()).
-    """
-    response = _client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.7,
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are an exam-generation assistant. "
+                "Return strict valid JSON only. "
+                "Never return HTML or Markdown."
+            ),
+        },
+        {
+            "role": "user",
+            "content": prompt,
+        },
+    ]
+
+    last_error = None
+
+    for attempt in range(LLM_ATTEMPTS):
+        try:
+            response = fast_completion(_client, messages, 0.8)
+            return response.choices[0].message.content
+        except Exception as e:
+            last_error = e
+            if attempt + 1 < LLM_ATTEMPTS:
+                time.sleep(retry_delay(e, attempt))
+
+    raise last_error
+
+
+def parse_llm_response(
+    raw_output: str,
+    question_type: str,
+    source_page=None,
+) -> dict:
+
+    raw_output = raw_output.strip()
+
+    raw_output = re.sub(
+        r"^```(?:json)?\s*",
+        "",
+        raw_output,
+        flags=re.IGNORECASE,
     )
-    return response.choices[0].message.content
 
+    raw_output = re.sub(
+        r"\s*```$",
+        "",
+        raw_output,
+    )
 
-# -----------------------------
-# 4. Parse + Format Output
-# -----------------------------
-
-def parse_llm_response(raw_output: str, question_type: str, source_page=None) -> dict:
-    """
-    Parses the LLM's raw text into the fixed structure that Nima expects.
-    Raises a clear error if the LLM didn't return valid JSON, so bad
-    output never silently gets passed downstream.
-    """
     try:
-        data = json.loads(raw_output.strip())
+        data = json.loads(raw_output)
+
     except json.JSONDecodeError as e:
-        raise ValueError(f"LLM did not return valid JSON: {e}\nRaw output:\n{raw_output}")
+
+        raise ValueError(
+            f"LLM did not return valid JSON: {e}\n"
+            f"Raw output:\n{raw_output}"
+        )
 
     structured = {
         "question_type": question_type,
-        "question": data.get("question"),
-        "correct_answer": data.get("correct_answer"),
+        "question": clean_text(data.get("question")),
+        "correct_answer": clean_text(
+            data.get("correct_answer")
+        ),
     }
 
     if question_type in ("MCQ", "True-False"):
-        structured["choices"] = data.get("choices")
+
+        choices = data.get("choices", [])
+
+        if isinstance(choices, list):
+            choices = [
+                clean_text(choice)
+                for choice in choices
+            ]
+
+        structured["choices"] = choices
 
     if source_page is not None:
         structured["source_page"] = source_page
@@ -143,111 +260,149 @@ def parse_llm_response(raw_output: str, question_type: str, source_page=None) ->
     return structured
 
 
-# -----------------------------
-# 5. Full pipeline for one chunk of context
-# -----------------------------
+def generate_question(
+    context: str,
+    question_type: str,
+    source_page=None,
+    topic_hint: str = "",
+    difficulty: str = "Medium",
+) -> dict:
 
-def generate_question(context: str, question_type: str, source_page=None, topic_hint: str = "") -> dict:
-    prompt = build_prompt(context, question_type, topic_hint)
+    prompt = build_prompt(
+        context=context,
+        question_type=question_type,
+        topic_hint=topic_hint,
+        difficulty=difficulty,
+    )
+
     raw_output = call_llm(prompt)
-    return parse_llm_response(raw_output, question_type, source_page)
+
+    return parse_llm_response(
+        raw_output,
+        question_type,
+        source_page,
+    )
 
 
-# -----------------------------
-# 6. Demo / manual test
-# -----------------------------
+def generate_from_topic(
+    topic: str,
+    question_type: str,
+    top_k: int = 4,
+    difficulty: str = "Medium",
+):
 
-def generate_from_topic(topic: str, question_type: str, top_k: int = 1):
-    """
-    Full end-to-end helper: pulls context from Habiba's rag_search.py for
-    a given topic, then generates a question from the top matching chunk.
-    Requires vector_db/ to already exist (i.e. rag_indexer.py has been run).
-    """
-    from rag_search import search_question  # Habiba's module, must be on the path
+    from rag_search import search_question
 
-    results = search_question(topic, top_k=top_k)
-    context = results["documents"][0][0]
-    page = results["metadatas"][0][0]["page"]
+    results = search_question(
+        topic,
+        top_k=top_k,
+    )
 
-    return generate_question(context, question_type, source_page=page, topic_hint=topic)
+    if not results["documents"]:
+        raise ValueError(
+            "No relevant content found in the uploaded PDF."
+        )
 
+    context_parts = results["documents"][0]
 
-# -----------------------------
-# 7. Generate a whole quiz at once
-# -----------------------------
+    context = "\n\n".join(context_parts)
+
+    pages = results["metadatas"][0]
+
+    source_page = pages[0]["page"] if pages else None
+
+    return generate_question(
+        context=context,
+        question_type=question_type,
+        source_page=source_page,
+        topic_hint=topic,
+        difficulty=difficulty,
+    )
+
 
 def generate_quiz(requests: list) -> list:
-    """
-    Generates several questions in one call, ready to hand off to Nima
-    as a single list.
 
-    `requests` is a list of dicts, each describing one question to generate:
-        [
-            {"topic": "generic classes", "question_type": "MCQ"},
-            {"topic": "generic classes", "question_type": "True-False"},
-            {"topic": "method overriding", "question_type": "Short Answer"},
-        ]
-
-    Returns a list of structured question dicts (same shape as
-    generate_question()'s output). If one question fails to generate
-    (bad JSON from the LLM, topic not found, etc.), it's skipped and
-    logged instead of crashing the whole batch.
-    """
     quiz = []
 
     for i, req in enumerate(requests, start=1):
+
         topic = req["topic"]
         question_type = req["question_type"]
+        difficulty = req.get(
+            "difficulty",
+            "Medium",
+        )
 
-        print(f"[{i}/{len(requests)}] Generating {question_type} question on '{topic}'...")
+        print(
+            f"[{i}/{len(requests)}] "
+            f"Generating {question_type} "
+            f"({difficulty}) on '{topic}'..."
+        )
 
         try:
-            question = generate_from_topic(topic, question_type)
+
+            question = generate_from_topic(
+                topic=topic,
+                question_type=question_type,
+                difficulty=difficulty,
+            )
+
             quiz.append(question)
+
         except Exception as e:
-            print(f"  Skipped — failed to generate this one: {e}")
+
+            print(
+                f"  Skipped — failed to generate this one: {e}"
+            )
 
     return quiz
 
 
-def save_quiz(quiz: list, path: str = "output/generated_quiz.json"):
-    """
-    Saves the generated quiz to a JSON file, e.g. for Nima to pick up.
-    """
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(quiz, f, indent=2, ensure_ascii=False)
-    print(f"Saved {len(quiz)} questions to {path}")
+def save_quiz(
+    quiz: list,
+    path: str = "output/generated_quiz.json",
+):
+
+    directory = os.path.dirname(path)
+
+    if directory:
+        os.makedirs(
+            directory,
+            exist_ok=True,
+        )
+
+    with open(
+        path,
+        "w",
+        encoding="utf-8",
+    ) as f:
+
+        json.dump(
+            quiz,
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )
+
+    print(
+        f"Saved {len(quiz)} questions to {path}"
+    )
 
 
 if __name__ == "__main__":
-    # Quick manual test using a mock context — no vector_db or API key needed
-    # just to check the prompt looks right:
+
     mock_context = (
-        "A generic class is a class that is parameterized over types. "
-        "Generics allow classes and methods to operate on objects of "
-        "various types while providing compile-time type safety."
+        "A generic class is a class that is parameterized "
+        "over types. Generics allow classes and methods to "
+        "operate on objects of various types while providing "
+        "compile-time type safety."
     )
-    prompt = build_prompt(mock_context, "MCQ", topic_hint="generic classes")
-    print("----- GENERATED PROMPT -----")
+
+    prompt = build_prompt(
+        mock_context,
+        "MCQ",
+        topic_hint="generic classes",
+        difficulty="Medium",
+    )
+
     print(prompt)
-
-    # Full real run (needs OPENAI_API_KEY set + mock_context replaced by
-    # real retrieved context, or use generate_from_topic() below instead):
-    #
-    # question = generate_question(mock_context, "MCQ", source_page=1)
-    # print(json.dumps(question, indent=2, ensure_ascii=False))
-    #
-    # Or, wired directly into Habiba's retrieval, one question at a time:
-    #
-    question = generate_from_topic("generic classes and methods", "MCQ")
-    print(json.dumps(question, indent=2, ensure_ascii=False))
-
-    # Or generate a whole quiz at once and save it for Nima:
-    #
-    # quiz_requests = [
-    #     {"topic": "generic classes", "question_type": "MCQ"},
-    #     {"topic": "generic classes", "question_type": "True-False"},
-    #     {"topic": "generic methods", "question_type": "Short Answer"},
-    # ]
-    # quiz = generate_quiz(quiz_requests)
-    # save_quiz(quiz)

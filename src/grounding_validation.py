@@ -1,13 +1,49 @@
 import json
 import os
+import re
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 from openai import OpenAI
 
 _client = OpenAI(
-    api_key=os.environ["GROQ_API_KEY"],
+    api_key=os.environ.get("GROQ_API_KEY", ""),
     base_url="https://api.groq.com/openai/v1",
 )
 
-LLM_MODEL = "openai/gpt-oss-20b"
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
+
+MAX_WORKERS = 3
+LLM_ATTEMPTS = 2
+MAX_OUTPUT_TOKENS = 220
+
+_fast_mode = True
+
+
+def fast_completion(messages, temperature, max_tokens=MAX_OUTPUT_TOKENS):
+    global _fast_mode
+
+    if _fast_mode:
+        try:
+            return _client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body={"reasoning_effort": "low"},
+            )
+        except Exception as e:
+            text = str(e).lower()
+            if "rate" in text or "429" in text or "timeout" in text:
+                raise
+            _fast_mode = False
+
+    return _client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
 
 
 def load_questions(path="output/generated_exam.json"):
@@ -21,12 +57,33 @@ def load_source_pages(path="output/extracted_text.json"):
     return {page["page"]: page["text"] for page in pages}
 
 
+MAX_CHARS_PER_PAGE = 1100
+MAX_SOURCE_CHARS = 4000
+
+
 def get_source_text(source_pages, pages_by_number):
     parts = []
+    used = 0
+
     for page in source_pages or []:
         text = pages_by_number.get(page, "")
-        if text:
-            parts.append(f"[Page {page}]\n{text}")
+        if not text:
+            continue
+
+        text = text[:MAX_CHARS_PER_PAGE]
+
+        if used + len(text) > MAX_SOURCE_CHARS:
+            text = text[: max(0, MAX_SOURCE_CHARS - used)]
+
+        if not text:
+            break
+
+        parts.append(f"[Page {page}]\n{text}")
+        used += len(text)
+
+        if used >= MAX_SOURCE_CHARS:
+            break
+
     return "\n\n".join(parts)
 
 
@@ -62,27 +119,54 @@ Decide a verdict:
 Respond with STRICT JSON ONLY (no extra text, no markdown fences), in exactly this shape:
 {{
   "verdict": "Correct",
-  "reason": "short explanation of why this verdict was chosen",
+  "reason": "why, in at most 25 words",
   "supported_by_source": true
 }}
 """
     return prompt
 
 
+def retry_delay(error, attempt):
+    match = re.search(r"try again in ([0-9.]+)s", str(error))
+    if match:
+        try:
+            return min(float(match.group(1)) + 0.5, 25.0)
+        except ValueError:
+            pass
+    return 2.0 * (attempt + 1)
+
+
 def call_llm(prompt):
-    response = _client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=[
-            {"role": "system", "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
-    return response.choices[0].message.content
+    last_error = None
+
+    messages = [
+        {"role": "system", "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary."},
+        {"role": "user", "content": prompt},
+    ]
+
+    for attempt in range(LLM_ATTEMPTS):
+        try:
+            response = fast_completion(messages, 0.2)
+            return response.choices[0].message.content
+        except Exception as e:
+            last_error = e
+            if attempt + 1 < LLM_ATTEMPTS:
+                time.sleep(retry_delay(e, attempt))
+
+    raise last_error
 
 
 def parse_response(raw_output):
-    data = json.loads(raw_output.strip())
+    text = (raw_output or "").strip()
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start == -1 or end <= start:
+            raise ValueError(f"model returned no JSON: {text[:120]!r}")
+        data = json.loads(text[start:end + 1])
 
     verdict = data.get("verdict", "Unsupported")
     if verdict not in ("Correct", "Incorrect", "Unsupported"):
@@ -115,18 +199,36 @@ def validate_question(question_data, pages_by_number):
     }
 
 
+def validate_one_safely(question_data, pages_by_number):
+    try:
+        return validate_question(question_data, pages_by_number)
+    except Exception as e:
+        return {
+            "question": question_data.get("question"),
+            "question_type": question_data.get("question_type"),
+            "topic": question_data.get("topic"),
+            "learning_objective": question_data.get("learning_objective"),
+            "source_pages": question_data.get("source_pages") or [],
+            "verdict": "Not evaluated",
+            "reason": f"validation failed: {e}",
+            "supported_by_source": False,
+        }
+
+
 def validate_exam(questions, pages_by_number):
-    results = []
+    print(f"Validating {len(questions)} questions ({MAX_WORKERS} at a time)...")
 
-    for i, question_data in enumerate(questions, start=1):
-        print(f"[{i}/{len(questions)}] Validating: {question_data.get('question')!r}")
+    def validate(question_data):
+        return validate_one_safely(question_data, pages_by_number)
 
-        try:
-            result = validate_question(question_data, pages_by_number)
-            results.append(result)
-            print(f"  -> verdict={result['verdict']}")
-        except Exception as e:
-            print(f"  Skipped -- failed to validate this one: {e}")
+    if len(questions) <= 1:
+        results = [validate(question) for question in questions]
+    else:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+            results = list(pool.map(validate, questions))
+
+    for i, result in enumerate(results, start=1):
+        print(f"[{i}/{len(results)}] verdict={result['verdict']} :: {result['question']!r}")
 
     return results
 

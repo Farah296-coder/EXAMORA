@@ -1,0 +1,15 @@
+{
+  "num_questions": 20,
+  "question_types": [
+    "MCQ"
+  ],
+  "difficulty_levels": [
+    "Medium"
+  ],
+  "topics": [
+    {
+      "topic": "data mining",
+      "learning_objectives": []
+    }
+  ]
+}

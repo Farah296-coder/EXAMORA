@@ -1,24 +1,50 @@
 import json
 import os
+
 import chromadb
 from sentence_transformers import SentenceTransformer
 
 
-# -----------------------------
-# 1. Load extracted PDF JSON
-# -----------------------------
+# ============================================================
+# BASE DIRECTORY
+# ============================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+
+# ============================================================
+# LOAD EXTRACTED PAGES
+# ============================================================
 
 def load_pages(json_path):
-    with open(json_path, "r", encoding="utf-8") as file:
+
+    with open(
+        json_path,
+        "r",
+        encoding="utf-8",
+    ) as file:
+
         return json.load(file)
 
 
-# -----------------------------
-# 2. Chunking
-# -----------------------------
+# ============================================================
+# CHUNKING
+# ============================================================
 
-def chunk_text(text, chunk_size=500, overlap=100):
+def chunk_text(
+    text,
+    chunk_size=500,
+    overlap=100,
+):
+
     chunks = []
+
+    if not text:
+        return chunks
 
     start = 0
 
@@ -37,6 +63,7 @@ def chunk_text(text, chunk_size=500, overlap=100):
 
 
 def create_chunks(pages):
+
     all_chunks = []
 
     for page in pages:
@@ -48,84 +75,251 @@ def create_chunks(pages):
 
         for chunk in chunks:
 
-            all_chunks.append({
-                "page": page_number,
-                "text": chunk
-            })
+            all_chunks.append(
+                {
+                    "page": page_number,
+                    "text": chunk,
+                }
+            )
 
     return all_chunks
 
 
-# -----------------------------
-# 3. Embedding Model
-# -----------------------------
+# ============================================================
+# EMBEDDING MODEL
+# ============================================================
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
 
 
-# -----------------------------
-# 4. Vector Database
-# -----------------------------
+# ============================================================
+# VECTOR DATABASE
+# ============================================================
 
 client = chromadb.PersistentClient(
-    path="vector_db"
+    path=os.path.join(
+        BASE_DIR,
+        "vector_db",
+    )
 )
+
 
 collection = client.get_or_create_collection(
     name="pdf_chunks"
 )
 
 
-# -----------------------------
-# 5. Store Chunks
-# -----------------------------
+# ============================================================
+# CLEAR OLD PDF
+# ============================================================
 
-def store_chunks(chunks):
+def clear_collection():
 
-    texts = [chunk["text"] for chunk in chunks]
+    try:
 
-    embeddings = model.encode(texts)
+        existing = collection.get()
 
-    for i, chunk in enumerate(chunks):
+        ids = existing.get("ids", [])
 
-        collection.upsert(
-            ids=[f"chunk_{i}"],
+        if ids:
 
-            embeddings=[
-                embeddings[i].tolist()
-            ],
+            collection.delete(
+                ids=ids
+            )
 
-            documents=[
-                chunk["text"]
-            ],
+        print(
+            f"Removed {len(ids)} old chunks."
+        )
 
-            metadatas=[
-                {
-                    "page": chunk["page"]
-                }
-            ]
+    except Exception as e:
+
+        print(
+            f"Warning while clearing collection: {e}"
         )
 
 
-# -----------------------------
-# Main
-# -----------------------------
+# ============================================================
+# STORE CHUNKS
+# ============================================================
+
+def store_chunks(
+    chunks,
+    clear_existing=True,
+):
+
+    if not chunks:
+
+        print(
+            "No chunks to store."
+        )
+
+        return 0
+
+    if clear_existing:
+
+        clear_collection()
+
+    texts = [
+        chunk["text"]
+        for chunk in chunks
+    ]
+
+    embeddings = model.encode(
+        texts,
+        show_progress_bar=False,
+    )
+
+    ids = []
+    documents = []
+    metadatas = []
+
+    for i, chunk in enumerate(chunks):
+
+        ids.append(
+            f"chunk_{i}"
+        )
+
+        documents.append(
+            chunk["text"]
+        )
+
+        metadatas.append(
+            {
+                "page": chunk["page"]
+            }
+        )
+
+    collection.upsert(
+        ids=ids,
+        embeddings=[
+            embedding.tolist()
+            for embedding in embeddings
+        ],
+        documents=documents,
+        metadatas=metadatas,
+    )
+
+    print(
+        f"Stored {len(chunks)} chunks successfully."
+    )
+
+    return len(chunks)
+
+
+# ============================================================
+# INDEX PDF
+# ============================================================
+
+def index_pdf(
+    pdf_path,
+    extracted_json_path=None,
+):
+
+    if not os.path.exists(pdf_path):
+
+        raise FileNotFoundError(
+            f"PDF not found: {pdf_path}"
+        )
+
+    if extracted_json_path is None:
+
+        extracted_json_path = os.path.join(
+            BASE_DIR,
+            "output",
+            "extracted_text.json",
+        )
+
+    # Import here to avoid circular imports
+    from pdf_processor import (
+        extract_pdf_text,
+        save_extracted_text,
+    )
+
+    print(
+        f"Processing PDF: {pdf_path}"
+    )
+
+    # --------------------------------------------------------
+    # Extract
+    # --------------------------------------------------------
+
+    pages = extract_pdf_text(
+        pdf_path
+    )
+
+    if not pages:
+
+        raise ValueError(
+            "No pages were found in the PDF."
+        )
+
+    print(
+        f"Extracted {len(pages)} pages."
+    )
+
+    # --------------------------------------------------------
+    # Save extracted text
+    # --------------------------------------------------------
+
+    save_extracted_text(
+        pages,
+        extracted_json_path,
+    )
+
+    # --------------------------------------------------------
+    # Create chunks
+    # --------------------------------------------------------
+
+    chunks = create_chunks(
+        pages
+    )
+
+    if not chunks:
+
+        raise ValueError(
+            "Could not extract usable text from the PDF."
+        )
+
+    print(
+        f"Created {len(chunks)} chunks."
+    )
+
+    # --------------------------------------------------------
+    # Store embeddings
+    # --------------------------------------------------------
+
+    stored_count = store_chunks(
+        chunks,
+        clear_existing=True,
+    )
+
+    return {
+        "pages": len(pages),
+        "chunks": stored_count,
+        "extracted_json": extracted_json_path,
+    }
+
+
+# ============================================================
+# MAIN
+# ============================================================
 
 if __name__ == "__main__":
 
-    json_path = os.path.join(
-        "output",
-        "extracted_text.json"
+    pdf_path = os.path.join(
+        BASE_DIR,
+        "data",
+        "L22_New_Generic Class and Methods.pdf",
     )
 
-    pages = load_pages(json_path)
+    result = index_pdf(
+        pdf_path
+    )
 
-    print(f"Loaded {len(pages)} pages.")
+    print(
+        "Embedding/indexing completed!"
+    )
 
-    chunks = create_chunks(pages)
-
-    print(f"Created {len(chunks)} chunks.")
-
-    store_chunks(chunks)
-
-    print("Embeddings stored successfully!")
+    print(result)
