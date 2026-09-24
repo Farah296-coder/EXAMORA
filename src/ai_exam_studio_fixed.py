@@ -615,6 +615,131 @@ render_html(
 
 
 # ============================================================
+# TEXT COLOUR HARDENING
+# ============================================================
+
+render_html(
+    """
+    <style>
+
+    html, body, .stApp, [data-testid="stAppViewContainer"] {
+        color: #0f172a !important;
+        color-scheme: light !important;
+    }
+
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+    div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stMarkdownContainer"] li,
+    div[data-testid="stText"] {
+        color: #334155;
+    }
+
+    div[data-testid="stMarkdownContainer"] strong { color: #1e1b4b; }
+
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+    .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 { color: #1e1b4b; }
+
+    div[data-testid="stCaptionContainer"],
+    div[data-testid="stCaptionContainer"] p { color: #64748b !important; }
+
+    div[data-testid="stWidgetLabel"] p,
+    div[data-testid="stWidgetLabel"] label,
+    .stTextInput label, .stTextArea label,
+    .stSelectbox label, .stMultiSelect label,
+    .stNumberInput label, .stFileUploader label {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    div[data-baseweb="input"],
+    div[data-baseweb="base-input"],
+    div[data-baseweb="textarea"] { background: #ffffff !important; }
+
+    .stTextInput input,
+    .stNumberInput input,
+    .stTextArea textarea {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: #e2e8f0 !important;
+    }
+
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder { color: #94a3b8 !important; }
+
+    div[data-baseweb="select"] > div {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: #e2e8f0 !important;
+    }
+
+    div[data-baseweb="popover"] div[role="listbox"],
+    div[data-baseweb="popover"] ul,
+    ul[role="listbox"] {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    li[role="option"], div[role="option"] { color: #0f172a !important; }
+    li[role="option"]:hover, div[role="option"]:hover { background: #f5f3ff !important; }
+
+    span[data-baseweb="tag"] {
+        background: #6d28d9 !important;
+        color: #ffffff !important;
+    }
+
+    span[data-baseweb="tag"] svg { fill: #ffffff !important; }
+
+    section[data-testid="stFileUploaderDropzone"],
+    div[data-testid="stFileUploader"] section {
+        background: #faf8ff !important;
+        color: #334155 !important;
+    }
+
+    section[data-testid="stFileUploaderDropzone"] span,
+    section[data-testid="stFileUploaderDropzone"] small,
+    div[data-testid="stFileUploaderFile"] span,
+    div[data-testid="stFileUploaderFile"] small { color: #64748b !important; }
+
+    section[data-testid="stFileUploaderDropzone"] button {
+        background: #ffffff !important;
+        color: #5b21b6 !important;
+        border: 1px solid #c4b5fd !important;
+    }
+
+    div[data-testid="stExpander"] {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    div[data-testid="stExpander"] summary,
+    div[data-testid="stExpander"] summary p {
+        color: #1e1b4b !important;
+        font-weight: 700 !important;
+    }
+
+    div.stButton > button:not([kind="primary"]) {
+        background: #ffffff !important;
+        color: #4c1d95 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    div[data-testid="stAlert"] p { color: inherit !important; }
+
+    div[data-testid="stSpinner"] p,
+    div[data-testid="stSpinner"] div { color: #5b21b6 !important; }
+
+    div[data-testid="stMetricValue"] { color: #5b21b6 !important; }
+    div[data-testid="stMetricLabel"] { color: #64748b !important; }
+
+    .grounding-card strong { color: #0f172a !important; }
+    .grounding-card > div { color: #475569 !important; }
+
+    </style>
+    """
+)
+
+
+# ============================================================
 # API
 # ============================================================
 
@@ -726,7 +851,7 @@ def clean_question_data(question):
 
     # Normalize True/False type strings
     q_type = str(cleaned.get("question_type", "")).strip()
-    if q_type.lower() in ["true/false", "true or false", "t/f", "tf", "true_false"]:
+    if q_type.lower() in ["true/false", "true-false", "true or false", "t/f", "tf", "true_false"]:
         cleaned["question_type"] = "True/False"
 
     choices = cleaned.get("choices")
@@ -750,6 +875,8 @@ def clean_exam_data(exam):
 # ============================================================
 
 def get_duplicate_pairs(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
     for key in ["duplicates", "similar_pairs", "pairs", "results"]:
@@ -760,6 +887,8 @@ def get_duplicate_pairs(data):
 
 
 def get_quality_items(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
     for key in ["results", "questions", "quality_results", "scores", "items"]:
@@ -812,6 +941,8 @@ def get_overall_quality(data, items):
 
 
 def get_grounding_items(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
 
@@ -885,6 +1016,24 @@ def normalize_verdict(verdict):
         return "supported"
 
     return "not_evaluated"
+
+
+def find_grounding_item(items, question, index):
+    question_text = ""
+    if isinstance(question, dict):
+        question_text = clean_display_text(question.get("question", ""))
+
+    if question_text:
+        for item in items:
+            if isinstance(item, dict):
+                item_text = clean_display_text(item.get("question", ""))
+                if item_text and item_text == question_text:
+                    return item
+
+    if index < len(items):
+        return items[index]
+
+    return None
 
 
 def get_similarity(item):
@@ -1475,8 +1624,16 @@ elif st.session_state.page == "Review":
                         new_q_dict = {}
 
                         if isinstance(regenerated, dict):
-                            if isinstance(regenerated.get("question"), dict):
-                                new_q_dict = dict(regenerated["question"])
+                            for wrapper_key in [
+                                "final_question",
+                                "regenerated_question",
+                                "new_question",
+                                "question",
+                            ]:
+                                wrapped = regenerated.get(wrapper_key)
+                                if isinstance(wrapped, dict):
+                                    new_q_dict = dict(wrapped)
+                                    break
                             else:
                                 new_q_dict = dict(regenerated)
                         elif isinstance(regenerated, str):
@@ -1488,6 +1645,15 @@ elif st.session_state.page == "Review":
 
                         new_q_dict["question_type"] = selected_type
                         new_q_dict["difficulty"] = selected_difficulty
+
+                        for carried_key in [
+                            "source_pages",
+                            "source_page",
+                            "topic",
+                            "learning_objective",
+                        ]:
+                            if not new_q_dict.get(carried_key) and question.get(carried_key):
+                                new_q_dict[carried_key] = question.get(carried_key)
 
                         if selected_type == "True/False":
                             new_q_dict["choices"] = ["True", "False"]
@@ -1718,7 +1884,7 @@ elif st.session_state.page == "Quality":
             grounding_items = get_grounding_items(st.session_state.grounding)
 
             for index, question in enumerate(exam):
-                item = grounding_items[index] if index < len(grounding_items) else None
+                item = find_grounding_item(grounding_items, question, index)
                 verdict_raw = get_grounding_verdict(item) if item else None
                 normalized = normalize_verdict(verdict_raw)
                 question_text = clean_display_text(question.get("question", ""))

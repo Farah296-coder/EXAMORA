@@ -46,6 +46,31 @@ EXTRACTED_JSON_PATH = os.path.join(
 )
 
 
+# ============================================================
+# QUESTION TYPE NORMALIZATION
+# ============================================================
+# The exam settings UI uses "True/False".
+# The generation pipeline expects "True-False".
+# ============================================================
+
+TRUE_FALSE_ALIASES = (
+    "true/false",
+    "true false",
+    "true_false",
+    "true-false",
+    "t/f",
+    "tf",
+)
+
+
+def to_generation_type(question_type):
+
+    if str(question_type).strip().lower() in TRUE_FALSE_ALIASES:
+        return "True-False"
+
+    return question_type
+
+
 os.makedirs(
     DATA_DIR,
     exist_ok=True
@@ -562,6 +587,12 @@ def generate_exam_endpoint(
             blueprint
         )
     )
+
+    for request in requests:
+
+        request["question_type"] = to_generation_type(
+            request["question_type"]
+        )
 
     # --------------------------------------------------------
     # 4. Generate exam

@@ -7,7 +7,7 @@ _client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 )
 
-LLM_MODEL = "openai/gpt-oss-20b"
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
 
 def load_questions(path="output/generated_exam.json"):

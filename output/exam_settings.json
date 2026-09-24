@@ -1,14 +1,15 @@
 {
-  "num_questions": 10,
+  "num_questions": 3,
   "question_types": [
-    "MCQ"
+    "MCQ",
+    "True/False"
   ],
   "difficulty_levels": [
     "Medium"
   ],
   "topics": [
     {
-      "topic": "oop",
+      "topic": "design pattern",
       "learning_objectives": []
     }
   ]
