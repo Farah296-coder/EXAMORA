@@ -14,13 +14,14 @@ from the UI so Farah (or anyone else) can `import` and call
 build_exam_settings() directly without needing to run the app.
 """
 
+from importlib.resources import path
 import json
 
 # -----------------------------
 # 1. Config: allowed values
 # -----------------------------
 
-QUESTION_TYPES = ["MCQ", "True-False", "Short Answer"]
+QUESTION_TYPES = ["MCQ", "True/False", "Short Answer"]
 DIFFICULTY_LEVELS = ["Easy", "Medium", "Hard"]
 
 
@@ -77,7 +78,7 @@ def build_exam_settings(num_questions, question_types, difficulty_levels, topics
     Returns a dict:
         {
             "num_questions": 10,
-            "question_types": ["MCQ", "True-False"],
+            "question_types": ["MCQ", "True/False"],
             "difficulty_levels": ["Easy", "Medium"],
             "topics": [ ... same shape as input, cleaned ... ]
         }
@@ -114,6 +115,11 @@ def save_exam_settings(exam_settings: dict, path: str = "output/exam_settings.js
     Saves the teacher's finalized settings to a JSON file, ready for
     Farah's exam blueprint system to pick up.
     """
+    from pathlib import Path
+
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     with open(path, "w", encoding="utf-8") as f:
         json.dump(exam_settings, f, indent=2, ensure_ascii=False)
     print(f"Saved exam settings to {path}")
@@ -123,7 +129,7 @@ if __name__ == "__main__":
     # Quick manual test — no Streamlit needed
     settings = build_exam_settings(
         num_questions=10,
-        question_types=["MCQ", "True-False"],
+        question_types=["MCQ", "True/False"],
         difficulty_levels=["Easy", "Medium"],
         topics=[
             {"topic": "Generic Classes", "learning_objectives": ["Explain the purpose of generics"]},

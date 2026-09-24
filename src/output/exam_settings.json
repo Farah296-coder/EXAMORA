@@ -1,5 +1,5 @@
 {
-  "num_questions": 10,
+  "num_questions": 20,
   "question_types": [
     "MCQ"
   ],
@@ -8,7 +8,7 @@
   ],
   "topics": [
     {
-      "topic": "oop",
+      "topic": "data mining",
       "learning_objectives": []
     }
   ]

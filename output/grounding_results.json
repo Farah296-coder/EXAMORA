@@ -1,114 +1,132 @@
 [
   {
-    "question": "Given a generic class `Box<T extends Comparable<T>>` that implements `Comparable<Box<T>>`, which of the following correctly implements the `compareTo` method so that `Collections.sort` can order a list of `Box` objects based on the natural ordering of their contained values?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": "Understand classes and objects",
-    "source_pages": [
-      3,
-      2,
-      9
-    ],
+    "question": "In the generic method signature public static > T maximum(T x, T y, T z), what is the role of the clause T extends Comparable?",
+    "question_type": "Short Answer",
+    "topic": null,
+    "learning_objective": null,
+    "source_pages": [],
     "verdict": "Unsupported",
-    "reason": "The source text does not contain any information about a Box class or its compareTo implementation, so the question cannot be verified against the provided source.",
+    "reason": "The source text does not contain any information about the generic method signature or the T extends Comparable clause, so the question cannot be verified.",
     "supported_by_source": false
   },
   {
-    "question": "In the context of Java's Comparable<T> interface, which of the following correctly describes the contract for the compareTo method?",
+    "question": "Which of the following statements is true regarding the use of primitive types in generic type variables?",
     "question_type": "MCQ",
     "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "learning_objective": null,
     "source_pages": [
-      3,
+      11,
       2,
-      9
+      3,
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract, matching the marked answer.",
+    "reason": "The source text explicitly states that primitive types cannot be used as type variables and that wrapper classes must be used instead.",
     "supported_by_source": true
   },
   {
-    "question": "Which of the following statements correctly describes the contract of the compareTo method in the Comparable<T> interface?",
+    "question": "In the generic method 'maximum', why is the type parameter declared as '>' rather than just ''?",
     "question_type": "MCQ",
     "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "learning_objective": null,
     "source_pages": [
-      3,
+      11,
       2,
-      9
+      3,
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract and matches the marked answer.",
+    "reason": "The source text shows the method signature uses <T extends Comparable<T>> to guarantee that T has a compareTo method, matching the marked answer.",
     "supported_by_source": true
   },
   {
-    "question": "When a class implements Comparable<T>, which of the following statements correctly describes the contract of its compareTo method and its impact on usage with Collections methods?",
+    "question": "Why is the declaration ArrayList invalid in Java generics?",
     "question_type": "MCQ",
     "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "learning_objective": null,
     "source_pages": [
-      3,
+      11,
       2,
-      9
+      3,
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract and its use with Collections, matching the marked answer.",
+    "reason": "The source text explicitly states that primitive types cannot be used as type variables in generic classes, matching the marked answer.",
     "supported_by_source": true
   },
   {
-    "question": "According to the provided information, what is the required behavior of the compareTo method in a class that implements Comparable<T>?",
+    "question": "When the method call maximum(3, 4, 5) is executed in the provided code, what type is inferred for the type parameter T?",
     "question_type": "MCQ",
     "topic": "oop",
-    "learning_objective": "Understand classes and objects",
+    "learning_objective": null,
     "source_pages": [
+      11,
+      2,
       3,
-      2,
-      9
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo method must return zero when objects are equal, a negative integer if the first is less than the second, and a positive integer if the first is greater, matching the marked answer.",
+    "reason": "The source code shows a generic method maximum that is called with integer literals, so the compiler infers T as Integer.",
     "supported_by_source": true
   },
   {
-    "question": "Which of the following statements about the compareTo method contract is FALSE based on the context?",
+    "question": "In the generic method maximum defined in the provided code, why is the type parameter declared as >?",
     "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "topic": "oop",
+    "learning_objective": null,
     "source_pages": [
-      5,
+      11,
       2,
-      9
+      3,
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract: zero for equal, negative if first < second, positive if first > second. Thus the statement claiming a positive return when first < second is false, matching the marked answer.",
+    "reason": "The source text shows the generic method declared with <T extends Comparable<T>>, which enables comparison of T objects, matching the marked answer.",
     "supported_by_source": true
   },
   {
-    "question": "Which statement about Java's generic ArrayList and Comparable interface is true regarding sorting with Collections.sort?",
+    "question": "Which of the following declarations correctly creates an ArrayList that can store double values in Java?",
     "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "topic": "oop",
+    "learning_objective": null,
     "source_pages": [
-      5,
+      11,
       2,
-      9
+      3,
+      10
     ],
-    "verdict": "Correct",
-    "reason": "The source text states that Comparable<T> objects can be used with the sorting methods of class Collections, implying that an ArrayList containing elements that implement Comparable<T> can be sorted. The marked answer reflects this requirement, while the other options are not supported by the text.",
+    "verdict": "Incorrect",
+    "reason": "The source text states that a primitive type cannot be used as a type parameter and that ArrayList<Double> must be used to store double values. The marked answer uses a raw ArrayList, which is not the correct declaration for storing Double objects.",
     "supported_by_source": true
   },
   {
-    "question": "In Java, a class that implements Comparable<T> must provide a compareTo method. Which of the following statements about the compareTo method is accurate?",
+    "question": "Which of the following statements correctly describes the generic method 'maximum' presented in the program?",
     "question_type": "MCQ",
-    "topic": "data structures",
-    "learning_objective": "Understand arrays and linked lists",
+    "topic": "oop",
+    "learning_objective": null,
     "source_pages": [
-      5,
+      11,
       2,
-      9
+      3,
+      10
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states the compareTo contract: return zero for equality, negative if the first is less, positive if the first is greater, which matches the marked answer.",
+    "reason": "The source text shows the method signature public static < T extends Comparable< T > > T maximum( T x, T y, T z ), confirming that the type parameter is bounded by Comparable, matching the marked answer.",
+    "supported_by_source": true
+  },
+  {
+    "question": "In the generic method maximum> T maximum(T x, T y, T z), why is the bound T extends Comparable required?",
+    "question_type": "MCQ",
+    "topic": "oop",
+    "learning_objective": null,
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "verdict": "Correct",
+    "reason": "The source text explicitly shows the generic method declared with <T extends Comparable<T>> and uses y.compareTo(max) and z.compareTo(max), indicating the bound is needed to allow comparison.",
     "supported_by_source": true
   }
 ]

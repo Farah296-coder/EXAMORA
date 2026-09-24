@@ -1,14 +1,192 @@
 [
   {
+    "topic": "oop",
     "question_type": "MCQ",
-    "question": "What is the primary objective of using generic classes in programming?",
-    "correct_answer": "To allow code reuse with different data types",
-    "choices": [
-      "To allow code reuse with different data types",
-      "To restrict class usage to a single data type",
-      "To increase compile-time errors",
-      "To enforce runtime type checking"
+    "difficulty": "Medium",
+    "question": "In the generic method signature public static <T extends Comparable<T>> T maximum(T x, T y, T z), what is the role of the clause T extends Comparable<T>?",
+    "correct_answer": "It ensures that T implements the compareTo method.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
     ],
-    "source_page": 3
+    "choices": [
+      "It ensures that T implements the compareTo method.",
+      "It restricts T to be a subclass of Number.",
+      "It allows T to be used with arithmetic operators.",
+      "It requires T to be a primitive type."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following statements is true regarding the use of primitive types in generic type variables?",
+    "correct_answer": "Primitive types cannot be used as type variables; use wrapper classes instead.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "Primitive types can be used directly as type variables.",
+      "Primitive types cannot be used as type variables; use wrapper classes instead.",
+      "Primitive types can be used only with autoboxing.",
+      "Primitive types can be used only with generic arrays."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "In the generic method 'maximum', why is the type parameter declared as '<T extends Comparable<T>>' rather than just '<T>'?",
+    "correct_answer": "To ensure that T has a compareTo method so the method can compare values.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "To ensure that T has a compareTo method so the method can compare values.",
+      "To allow T to be any type, including primitives.",
+      "To restrict T to be a numeric type only.",
+      "To enforce that T is a subclass of Number."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Why is the declaration ArrayList<double> invalid in Java generics?",
+    "correct_answer": "Primitive types cannot be used as type variables.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "Primitive types cannot be used as type variables.",
+      "Wrapper classes are faster than primitive types.",
+      "ArrayList requires numeric types only.",
+      "The double type is not comparable."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "When the method call maximum(3, 4, 5) is executed in the provided code, what type is inferred for the type parameter T?",
+    "correct_answer": "Integer",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "Integer",
+      "Double",
+      "String",
+      "Object"
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "In the generic method maximum defined in the provided code, why is the type parameter declared as <T extends Comparable<T>>?",
+    "correct_answer": "To allow the method to compare objects of type T.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "To allow the method to compare objects of type T.",
+      "To restrict T to numeric types only.",
+      "To enable the method to accept primitive types like int.",
+      "To enforce that T has a default constructor."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following declarations correctly creates an ArrayList that can store double values in Java?",
+    "correct_answer": "ArrayList<Double> doubles = new ArrayList<Double>();",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "ArrayList<double> doubles = new ArrayList<double>();",
+      "ArrayList<Double> doubles = new ArrayList<Double>();",
+      "ArrayList<Double[]> doubles = new ArrayList<Double[]>();",
+      "ArrayList<double> doubles = new ArrayList<Double>();"
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following statements correctly describes the generic method 'maximum' presented in the program?",
+    "correct_answer": "The method uses a type parameter bounded by Comparable<T> to ensure all arguments are comparable.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "The method uses a type parameter bounded by Comparable<T> to ensure all arguments are comparable.",
+      "The method can accept arguments of any primitive type because Java generics allow boxing.",
+      "The return type of the method is always int, regardless of the argument types.",
+      "The method requires the arguments to be of the same class type, but not necessarily implementing Comparable."
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following method signatures correctly defines a generic method that returns the maximum of three objects of the same type, assuming the objects implement Comparable?",
+    "correct_answer": "public static <T extends Comparable<T>> T maximum(T x, T y, T z)",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "public static <T extends Comparable> T maximum(T x, T y, T z)",
+      "public static <T> T maximum(T x, T y, T z)",
+      "public static <T extends Comparable<T>> T maximum(T x, T y, T z)",
+      "public static <T extends Comparable<T>> T maximum(T[] values)"
+    ]
+  },
+  {
+    "topic": "oop",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "In the generic method maximum<T extends Comparable<T>> T maximum(T x, T y, T z), why is the bound T extends Comparable<T> required?",
+    "correct_answer": "To allow the method to compare the elements using compareTo.",
+    "source_pages": [
+      11,
+      2,
+      3,
+      10
+    ],
+    "choices": [
+      "To allow the method to compare the elements using compareTo.",
+      "To ensure that T can be added to a collection.",
+      "To restrict T to numeric types only.",
+      "To enable the method to return a string representation of T."
+    ]
   }
 ]

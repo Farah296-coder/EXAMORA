@@ -1,20 +1,166 @@
 {
   "questions": [
     {
-      "question": "What is the primary objective of using generic classes in programming?",
+      "question": "Which of the following is NOT an application of clustering as described in the material?",
       "question_type": "MCQ",
-      "topic": null,
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 90,
+        "clarity": 88,
+        "distractors": 100
+      },
+      "feedback": "The question clearly asks which option is not a clustering application, aligning with the objective and is unambiguous.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which data mining technique would you use to group genes or proteins that share similar functions?",
+      "question_type": "MCQ",
+      "topic": "data mining",
       "quality_score": 89,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 70,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly asks for the appropriate data mining technique for grouping genes/proteins, aligning with the objective and topic, though it may be slightly easier than medium.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following data mining tasks is most appropriately addressed by regression techniques?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 90,
+        "clarity": 88,
+        "distractors": 100
+      },
+      "feedback": "The question directly asks which data mining task fits regression, aligning well with the objective and topic, and is clearly worded.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which data mining technique is most appropriate for grouping similar documents and genes with similar functions?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 75,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question clearly targets a core data mining technique, but its straightforward nature makes it slightly easier than a typical medium-level item.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A medical study aims to predict whether a tumor is benign or malignant based on imaging features. Which data mining technique is most appropriate?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
       "scores": {
         "relevance": 90,
         "difficulty": 80,
-        "objective": 85,
-        "clarity": 92,
+        "objective": 90,
+        "clarity": 90,
         "distractors": 100
       },
-      "feedback": "Clear, directly tests understanding of generics; basic difficulty.",
+      "feedback": "The question directly asks for a data mining technique suitable for a binary classification problem, aligning well with the topic and objective. It is clear and appropriately challenging for a medium level.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following is NOT listed as an application of clustering in the context provided?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 88,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 70,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly asks about clustering applications, aligning well with the objective and topic. It is clear and concise, but the answer choices are straightforward, making it slightly easier than a typical medium-level question.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A supermarket wants to identify sets of products that are frequently purchased together in the same transaction. Which data mining technique should be used to generate the rules that predict the presence of one item based on the presence of others?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 87,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 70,
+        "objective": 90,
+        "clarity": 88,
+        "distractors": 100
+      },
+      "feedback": "The question directly targets association rule mining, a core data mining technique, and is clearly worded, though it may be slightly easier than a typical medium-level item.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A company wants to identify customers who have unusual purchasing patterns that differ significantly from the norm, possibly indicating fraudulent behavior. Which data mining technique is most appropriate?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 90,
+        "clarity": 88,
+        "distractors": 100
+      },
+      "feedback": "The question clearly targets anomaly detection, a core data mining technique for fraud detection, and is well-structured.",
+      "distractor_issues": []
+    },
+    {
+      "question": "A retailer wants to analyze sales transactions to determine which items are often purchased together so they can place them on the same shelf. Which data mining technique would be most appropriate for this task?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 91,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly targets association rule mining, a core data mining concept, and is clearly worded.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following best describes the primary goal of clustering in data mining?",
+      "question_type": "MCQ",
+      "topic": "data mining",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 80,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly targets a fundamental concept of clustering, making it relevant and clear, though it may be slightly easier than a typical medium-level item.",
       "distractor_issues": []
     }
   ],
-  "duplicates": []
+  "duplicates": [
+    {
+      "question_a": 1,
+      "question_b": 6,
+      "similarity": 0.872
+    },
+    {
+      "question_a": 7,
+      "question_b": 9,
+      "similarity": 0.852
+    }
+  ]
 }
