@@ -31,7 +31,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 from openai import OpenAI
-from sentence_transformers import SentenceTransformer
+import embedding_model
 
 # -----------------------------
 # 1. Config
@@ -48,9 +48,6 @@ _client = OpenAI(
 
 LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
-# Same embedding model already used for the vector DB in rag_indexer.py,
-# reused here so we don't pull in a second model just for this.
-_embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # How each dimension contributes to the overall /100 quality score.
 # distractors only applies to MCQ questions — its weight is redistributed
@@ -315,7 +312,7 @@ def score_question(question_data):
 
 def embed_questions(questions):
     texts = [q.get("question", "") for q in questions]
-    return _embedding_model.encode(texts)
+    return embedding_model.encode(texts)
 
 
 def cosine_similarity(vec_a, vec_b):

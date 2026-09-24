@@ -3,7 +3,7 @@ import os
 
 import chromadb
 import shutil
-from sentence_transformers import SentenceTransformer
+import embedding_model
 
 
 # ============================================================
@@ -90,9 +90,6 @@ def create_chunks(pages):
 # EMBEDDING MODEL
 # ============================================================
 
-model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
 
 
 # ============================================================
@@ -185,7 +182,7 @@ def store_chunks(
         for chunk in chunks
     ]
 
-    embeddings = model.encode(
+    embeddings = embedding_model.encode(
         texts,
         show_progress_bar=False,
     )

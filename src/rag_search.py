@@ -1,11 +1,7 @@
 import chromadb
 import os
 import shutil
-from sentence_transformers import SentenceTransformer
-
-
-# Load the same embedding model
-model = SentenceTransformer("all-MiniLM-L6-v2")
+import embedding_model
 
 
 # Connect to the existing vector database
@@ -52,7 +48,7 @@ def search_question(topic, learning_objective="", top_k=3):
     query = build_retrieval_query(topic, learning_objective)
 
     # Convert the query into a vector
-    question_embedding = model.encode(query)
+    question_embedding = embedding_model.encode(query)
 
     # Search for the closest chunks
     results = collection.query(
