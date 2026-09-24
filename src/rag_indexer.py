@@ -2,6 +2,7 @@ import json
 import os
 
 import chromadb
+import shutil
 from sentence_transformers import SentenceTransformer
 
 
@@ -98,17 +99,35 @@ model = SentenceTransformer(
 # VECTOR DATABASE
 # ============================================================
 
-client = chromadb.PersistentClient(
-    path=os.path.join(
-        BASE_DIR,
-        "vector_db",
-    )
+VECTOR_DB_PATH = os.path.join(
+    BASE_DIR,
+    "vector_db",
 )
 
 
-collection = client.get_or_create_collection(
-    name="pdf_chunks"
-)
+def open_collection(path, name="pdf_chunks"):
+    """A store written by another Chroma version cannot be opened; start over."""
+    try:
+        chroma_client = chromadb.PersistentClient(path=path)
+        return chroma_client, chroma_client.get_or_create_collection(name=name)
+    except Exception as error:
+        print(f"Vector store unusable ({error}); rebuilding it from scratch.")
+
+    try:
+        from chromadb.api.shared_system_client import SharedSystemClient
+
+        SharedSystemClient._identifier_to_system.clear()
+    except Exception:
+        pass
+
+    shutil.rmtree(path, ignore_errors=True)
+    os.makedirs(path, exist_ok=True)
+
+    chroma_client = chromadb.PersistentClient(path=path)
+    return chroma_client, chroma_client.get_or_create_collection(name=name)
+
+
+client, collection = open_collection(VECTOR_DB_PATH)
 
 
 # ============================================================
