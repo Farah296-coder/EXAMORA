@@ -18,7 +18,7 @@ _client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 )
 
-LLM_MODEL = "openai/gpt-oss-20b"
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
 
 def clean_text(value):
@@ -132,7 +132,7 @@ Generate exactly ONE question.
     return prompt
 
 LLM_ATTEMPTS = 3
-MAX_OUTPUT_TOKENS = 900
+MAX_OUTPUT_TOKENS = 600
 
 _fast_mode = True
 
@@ -163,6 +163,16 @@ def fast_completion(client, messages, temperature, max_tokens=MAX_OUTPUT_TOKENS)
     )
 
 
+def retry_delay(error, attempt):
+    match = re.search(r"try again in ([0-9.]+)s", str(error))
+    if match:
+        try:
+            return min(float(match.group(1)) + 0.5, 25.0)
+        except ValueError:
+            pass
+    return 2.0 * (attempt + 1)
+
+
 def call_llm(prompt: str) -> str:
     messages = [
         {
@@ -188,7 +198,7 @@ def call_llm(prompt: str) -> str:
         except Exception as e:
             last_error = e
             if attempt + 1 < LLM_ATTEMPTS:
-                time.sleep(2 * (attempt + 1))
+                time.sleep(retry_delay(e, attempt))
 
     raise last_error
 

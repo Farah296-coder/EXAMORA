@@ -2,7 +2,6 @@
   "num_questions": 10,
   "question_types": [
     "MCQ",
-    "Short Answer",
     "True/False"
   ],
   "difficulty_levels": [

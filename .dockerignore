@@ -1,0 +1,10 @@
+.git
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+vector_db/
+output/*.json
+data/uploads/*
+.streamlit/secrets.toml

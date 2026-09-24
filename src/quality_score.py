@@ -46,7 +46,7 @@ _client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 ) if _groq_key else None
 
-LLM_MODEL = "openai/gpt-oss-20b"
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
 # Same embedding model already used for the vector DB in rag_indexer.py,
 # reused here so we don't pull in a second model just for this.
@@ -61,9 +61,9 @@ WEIGHTS = {"relevance": 0.25, "difficulty": 0.20, "objective": 0.25, "clarity": 
 DUPLICATE_THRESHOLD = 0.85
 
 MAX_WORKERS = 4
-LLM_VERIFY_THRESHOLD = 0.65
+LLM_VERIFY_THRESHOLD = 0.8
 LLM_ATTEMPTS = 2
-MAX_OUTPUT_TOKENS = 700
+MAX_OUTPUT_TOKENS = 260
 
 _fast_mode = True
 
@@ -152,6 +152,16 @@ Respond with STRICT JSON ONLY (no extra text, no markdown fences), in exactly th
     return prompt
 
 
+def retry_delay(error, attempt):
+    match = re.search(r"try again in ([0-9.]+)s", str(error))
+    if match:
+        try:
+            return min(float(match.group(1)) + 0.5, 25.0)
+        except ValueError:
+            pass
+    return 2.0 * (attempt + 1)
+
+
 def call_llm(prompt):
     api_key = os.environ.get("GROQ_API_KEY")
     client = _client
@@ -179,7 +189,7 @@ def call_llm(prompt):
         except Exception as e:
             last_error = e
             if attempt + 1 < LLM_ATTEMPTS:
-                time.sleep(2 * (attempt + 1))
+                time.sleep(retry_delay(e, attempt))
 
     raise last_error
 
@@ -493,8 +503,9 @@ def evaluate_exam(questions):
 
     duplicates = detect_duplicates(questions)
     for dup in duplicates:
+        similarity = dup.get("semantic_similarity", dup.get("similarity"))
         print(f"Duplicate detected -> Question {dup['question_a']} similar to Question {dup['question_b']} "
-              f"(similarity={dup['similarity']})")
+              f"(similarity={similarity}, status={dup.get('status')})")
 
     return {
         "questions": results,

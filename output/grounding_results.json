@@ -1,135 +1,151 @@
 [
   {
-    "question": "Which of the following is NOT listed as a benefit of parallel computing in the lecture?",
+    "question": "According to the material, which statement best describes the primary purpose of software design patterns?",
     "question_type": "MCQ",
-    "topic": "High Performance Computing",
+    "topic": "Software Design Patterns",
     "learning_objective": null,
     "source_pages": [
       1,
-      6,
-      10,
-      12
-    ],
-    "verdict": "Correct",
-    "reason": "The source lists benefits such as solving memory‑limited problems, speeding up unsolvable problems, and processing large data volumes, but does not mention cost reduction.",
-    "supported_by_source": true
-  },
-  {
-    "question": "Explain why a solid background in C/C++ programming is considered a prerequisite for this high‑performance computing course.",
-    "question_type": "Short Answer",
-    "topic": "Prerequisites",
-    "learning_objective": null,
-    "source_pages": [
-      2,
-      4,
-      1,
-      10
-    ],
-    "verdict": "Correct",
-    "reason": "The question directly references the source statement that students must be strong C/C++ programmers due to exposure to C-like parallel languages, and the marked answer accurately reflects this.",
-    "supported_by_source": true
-  },
-  {
-    "question": "The final exam contributes 40% to the overall course grade.",
-    "question_type": "True/False",
-    "topic": "Textbooks",
-    "learning_objective": null,
-    "source_pages": [
-      4,
-      1,
-      35,
-      3
-    ],
-    "verdict": "Correct",
-    "reason": "The source text explicitly states that the final exam contributes 40% to the overall course grade.",
-    "supported_by_source": true
-  },
-  {
-    "question": "A student earned 85% on the combined quizzes and attendance component, 78% on the two midterm exams, and 92% on the final exam. What is the student's overall course score?",
-    "question_type": "MCQ",
-    "topic": "Course Assesments",
-    "learning_objective": null,
-    "source_pages": [
-      4,
-      2,
-      23,
-      24
-    ],
-    "verdict": "Not evaluated",
-    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6895, Requested 1269. Please try again in 1.23s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
-    "supported_by_source": false
-  },
-  {
-    "question": "Describe the main difference between SIMD and MIMD in Flynn’s taxonomy.",
-    "question_type": "Short Answer",
-    "topic": "Outline",
-    "learning_objective": null,
-    "source_pages": [
-      32,
-      1,
-      24,
-      25
-    ],
-    "verdict": "Not evaluated",
-    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6846, Requested 1691. Please try again in 4.0275s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
-    "supported_by_source": false
-  },
-  {
-    "question": "HPC requires a single high-performance server to aggregate computing power.",
-    "question_type": "True/False",
-    "topic": "High Performance Computing (HPC) refers to the",
-    "learning_objective": null,
-    "source_pages": [
-      6,
-      7,
-      1
-    ],
-    "verdict": "Not evaluated",
-    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198986, Requested 2485. Please try again in 10m35.472s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
-    "supported_by_source": false
-  },
-  {
-    "question": "Which statement best explains why High Performance Computing (HPC) is valuable for scientific research?",
-    "question_type": "MCQ",
-    "topic": "HPC: What for?",
-    "learning_objective": null,
-    "source_pages": [
-      7,
-      6,
-      33
-    ],
-    "verdict": "Correct",
-    "reason": "The source text states that HPC processes huge volumes of data at very high speeds using multiple computers and storage devices, which matches the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "Name two limitations of single CPU computing that parallel computing can address, as mentioned in the text.",
-    "question_type": "Short Answer",
-    "topic": "What is Parallel Computing?",
-    "learning_objective": null,
-    "source_pages": [
-      10,
+      3,
       8,
-      12,
-      9
+      4
     ],
-    "verdict": "Correct",
-    "reason": "The source text lists the two limitations of single CPU computing as available memory and performance, matching the marked answer.",
-    "supported_by_source": true
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7737, Requested 896. Please try again in 4.7475s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "supported_by_source": false
   },
   {
-    "question": "A parallel program can achieve perfect speedup even if it contains serial sections.",
+    "question": "The primary reference for the course is the book 'Head First Design Patterns, 2nd edition, published by O'Reilly Media in 2020.'",
     "question_type": "True/False",
-    "topic": "Serial Computing- vs - Parallel Computing",
+    "topic": "Course References",
     "learning_objective": null,
     "source_pages": [
       9,
-      10,
-      18,
-      12
+      12,
+      2,
+      10
     ],
-    "verdict": "Not evaluated",
-    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198980, Requested 1512. Please try again in 3m32.543999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
-    "supported_by_source": false
+    "verdict": "Correct",
+    "reason": "Source lists primary reference exactly as stated.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Which of the following is NOT mentioned as a characteristic of good software design in the provided material?",
+    "question_type": "MCQ",
+    "topic": "What is Good Software Design?",
+    "learning_objective": null,
+    "source_pages": [
+      4,
+      5,
+      1,
+      6
+    ],
+    "verdict": "Correct",
+    "reason": "Scalable is not listed among characteristics; others are present",
+    "supported_by_source": true
+  },
+  {
+    "question": "Good software design aims to make changes with the least possible impact on existing code.",
+    "question_type": "True/False",
+    "topic": "Why Software Design must Handle Change",
+    "learning_objective": null,
+    "source_pages": [
+      5,
+      6,
+      4,
+      15
+    ],
+    "verdict": "Correct",
+    "reason": "Source explicitly states good design aims to minimize impact of changes; true answer matches.",
+    "supported_by_source": true
+  },
+  {
+    "question": "According to the material, which of the following is NOT listed as a negative effect of poor design on software maintainability?",
+    "question_type": "MCQ",
+    "topic": "Maintainability",
+    "learning_objective": null,
+    "source_pages": [
+      6,
+      4,
+      14,
+      5
+    ],
+    "verdict": "Correct",
+    "reason": "Improved performance is not mentioned among listed negative effects of poor design",
+    "supported_by_source": true
+  },
+  {
+    "question": "In the SimUDuck game, the original design used a single superclass named Duck from which all other duck types inherit.",
+    "question_type": "True/False",
+    "topic": "Example: SimUDuck",
+    "learning_objective": null,
+    "source_pages": [
+      7,
+      9,
+      12,
+      8
+    ],
+    "verdict": "Correct",
+    "reason": "Source confirms original design used a single superclass Duck for all duck types; true answer matches.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Which of the following best describes a problem that can arise when using inheritance in object‑oriented design?",
+    "question_type": "MCQ",
+    "topic": "Problems with Inheritance",
+    "learning_objective": null,
+    "source_pages": [
+      10,
+      11,
+      15,
+      8
+    ],
+    "verdict": "Correct",
+    "reason": "Source states subclasses may inherit behavior they should not have, matching the marked answer.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Separating behaviors into independent classes, rather than relying solely on inheritance, helps avoid unwanted inherited behavior.",
+    "question_type": "True/False",
+    "topic": "Reusability",
+    "learning_objective": null,
+    "source_pages": [
+      11,
+      6,
+      2,
+      15
+    ],
+    "verdict": "Correct",
+    "reason": "Source states inheritance can cause unwanted behavior; separating behaviors into independent classes avoids this.",
+    "supported_by_source": true
+  },
+  {
+    "question": "According to the design principles described, how does encapsulating varying behaviors (such as flying and quacking in the SimUDuck example) increase a system's flexibility?",
+    "question_type": "MCQ",
+    "topic": "Flexibility",
+    "learning_objective": null,
+    "source_pages": [
+      13,
+      15,
+      14
+    ],
+    "verdict": "Correct",
+    "reason": "Source states encapsulating varying behaviors allows adding new implementations without modifying Duck, increasing flexibility.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Reducing coupling helps keep changes localized, while high cohesion groups related responsibilities together.",
+    "question_type": "True/False",
+    "topic": "Coupling and Cohesion",
+    "learning_objective": null,
+    "source_pages": [
+      14,
+      15,
+      4,
+      13
+    ],
+    "verdict": "Correct",
+    "reason": "Source defines reducing coupling localizes changes and cohesion groups related responsibilities; matches statement.",
+    "supported_by_source": true
   }
 ]

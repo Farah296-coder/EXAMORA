@@ -1,1 +1,181 @@
-[]
+[
+  {
+    "topic": "Software Design Patterns",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "According to the material, which statement best describes the primary purpose of software design patterns?",
+    "correct_answer": "They offer reusable design solutions that capture accumulated object‑oriented experience.",
+    "source_pages": [
+      1,
+      3,
+      8,
+      4
+    ],
+    "choices": [
+      "They supply complete, ready-to-use code that can be directly inserted into a project.",
+      "They offer reusable design solutions that capture accumulated object‑oriented experience.",
+      "They eliminate the need for any further testing of the software after implementation.",
+      "They focus solely on improving the performance of low‑level algorithms."
+    ]
+  },
+  {
+    "topic": "Course References",
+    "question_type": "True-False",
+    "difficulty": "Medium",
+    "question": "The primary reference for the course is the book 'Head First Design Patterns, 2nd edition, published by O'Reilly Media in 2020.'",
+    "correct_answer": "True",
+    "source_pages": [
+      9,
+      12,
+      2,
+      10
+    ],
+    "choices": [
+      "True",
+      "False"
+    ]
+  },
+  {
+    "topic": "What is Good Software Design?",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following is NOT mentioned as a characteristic of good software design in the provided material?",
+    "correct_answer": "Scalable",
+    "source_pages": [
+      4,
+      5,
+      1,
+      6
+    ],
+    "choices": [
+      "Maintainable",
+      "Reusable",
+      "Scalable",
+      "Extensible"
+    ]
+  },
+  {
+    "topic": "Why Software Design must Handle Change",
+    "question_type": "True-False",
+    "difficulty": "Medium",
+    "question": "Good software design aims to make changes with the least possible impact on existing code.",
+    "correct_answer": "True",
+    "source_pages": [
+      5,
+      6,
+      4,
+      15
+    ],
+    "choices": [
+      "True",
+      "False"
+    ]
+  },
+  {
+    "topic": "Maintainability",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "According to the material, which of the following is NOT listed as a negative effect of poor design on software maintainability?",
+    "correct_answer": "Improved performance",
+    "source_pages": [
+      6,
+      4,
+      14,
+      5
+    ],
+    "choices": [
+      "Changes in one class affect many other classes",
+      "Duplicate code",
+      "Increased chance of bugs",
+      "Improved performance"
+    ]
+  },
+  {
+    "topic": "Example: SimUDuck",
+    "question_type": "True-False",
+    "difficulty": "Medium",
+    "question": "In the SimUDuck game, the original design used a single superclass named Duck from which all other duck types inherit.",
+    "correct_answer": "True",
+    "source_pages": [
+      7,
+      9,
+      12,
+      8
+    ],
+    "choices": [
+      "True",
+      "False"
+    ]
+  },
+  {
+    "topic": "Problems with Inheritance",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "Which of the following best describes a problem that can arise when using inheritance in object‑oriented design?",
+    "correct_answer": "Subclasses may inherit behavior that they do not need or should not have.",
+    "source_pages": [
+      10,
+      11,
+      15,
+      8
+    ],
+    "choices": [
+      "All subclasses must implement their own unique behaviors from scratch.",
+      "Subclasses may inherit behavior that they do not need or should not have.",
+      "Inheritance guarantees that no code changes will affect other classes.",
+      "Each subclass automatically receives only the behaviors that are relevant to it."
+    ]
+  },
+  {
+    "topic": "Reusability",
+    "question_type": "True-False",
+    "difficulty": "Medium",
+    "question": "Separating behaviors into independent classes, rather than relying solely on inheritance, helps avoid unwanted inherited behavior.",
+    "correct_answer": "True",
+    "source_pages": [
+      11,
+      6,
+      2,
+      15
+    ],
+    "choices": [
+      "True",
+      "False"
+    ]
+  },
+  {
+    "topic": "Flexibility",
+    "question_type": "MCQ",
+    "difficulty": "Medium",
+    "question": "According to the design principles described, how does encapsulating varying behaviors (such as flying and quacking in the SimUDuck example) increase a system's flexibility?",
+    "correct_answer": "It allows new behavior implementations to be added without modifying the existing Duck class.",
+    "source_pages": [
+      13,
+      15,
+      14
+    ],
+    "choices": [
+      "It allows new behavior implementations to be added without modifying the existing Duck class.",
+      "It eliminates the need for any interfaces, letting classes directly inherit behavior.",
+      "It tightly couples the Duck class to specific behavior implementations, ensuring consistency.",
+      "It merges all responsibilities into a single class, reducing the number of components."
+    ]
+  },
+  {
+    "topic": "Coupling and Cohesion",
+    "question_type": "True-False",
+    "difficulty": "Medium",
+    "question": "Reducing coupling helps keep changes localized, while high cohesion groups related responsibilities together.",
+    "correct_answer": "True",
+    "source_pages": [
+      14,
+      15,
+      4,
+      13
+    ],
+    "choices": [
+      "True",
+      "False"
+    ]
+  }
+]

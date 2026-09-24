@@ -1,20 +1,284 @@
 {
   "questions": [
     {
-      "question": "The primary reference for this course is \"Design Patterns: Elements of Reusable Object‑Oriented Software\" by Gamma, Helm, Johnson, and Vlissides.",
+      "question": "According to the material, which statement best describes the primary purpose of software design patterns?",
+      "question_type": "MCQ",
+      "topic": "Software Design Patterns",
+      "quality_score": 91,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly addresses the core concept of design patterns, matches a medium difficulty level, aligns well with the learning objective, and is clearly phrased.",
+      "distractor_issues": []
+    },
+    {
+      "question": "The primary reference for the course is the book 'Head First Design Patterns, 2nd edition, published by O'Reilly Media in 2020.'",
       "question_type": "True/False",
       "topic": "Course References",
-      "quality_score": 84,
+      "quality_score": 85,
       "scores": {
-        "relevance": 90,
+        "relevance": 95,
         "difficulty": 70,
         "objective": 85,
         "clarity": 90,
         "distractors": null
       },
-      "feedback": "The question directly asks about the primary reference, aligning well with the topic and objective, but its true/false format may be too simple for a medium difficulty level.",
+      "feedback": "The question directly asks about the primary course reference, matching the topic and objective, and is clearly worded. As a true/false item it is simpler than a typical medium‑difficulty question, so the difficulty rating is lower.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following is NOT mentioned as a characteristic of good software design in the provided material?",
+      "question_type": "MCQ",
+      "topic": "What is Good Software Design?",
+      "quality_score": 89,
+      "scores": {
+        "relevance": 92,
+        "difficulty": 78,
+        "objective": 88,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question aligns well with the topic and objective, asking directly about characteristics of good design. It matches a medium difficulty level, though the answer may be obvious if the material is clear. Wording is clear and unambiguous.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Good software design aims to make changes with the least possible impact on existing code.",
+      "question_type": "True/False",
+      "topic": "Why Software Design must Handle Change",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": null
+      },
+      "feedback": "The statement directly addresses why design must handle change, matches a medium difficulty true/false format, aligns well with the learning objective, and is clearly phrased.",
+      "distractor_issues": []
+    },
+    {
+      "question": "According to the material, which of the following is NOT listed as a negative effect of poor design on software maintainability?",
+      "question_type": "MCQ",
+      "topic": "Maintainability",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 92,
+        "difficulty": 80,
+        "objective": 88,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly addresses maintainability by asking about negative effects of poor design, matching the objective. It is appropriately medium difficulty and clearly worded, though the distractor 'Improved performance' is obvious, slightly lowering difficulty.",
+      "distractor_issues": []
+    },
+    {
+      "question": "In the SimUDuck game, the original design used a single superclass named Duck from which all other duck types inherit.",
+      "question_type": "True/False",
+      "topic": "Example: SimUDuck",
+      "quality_score": 89,
+      "scores": {
+        "relevance": 90,
+        "difficulty": 85,
+        "objective": 90,
+        "clarity": 90,
+        "distractors": null
+      },
+      "feedback": "Evaluated using domain heuristics (Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7904, Requested 550. Please try again in 3.405s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}})",
+      "distractor_issues": []
+    },
+    {
+      "question": "Which of the following best describes a problem that can arise when using inheritance in object‑oriented design?",
+      "question_type": "MCQ",
+      "topic": "Problems with Inheritance",
+      "quality_score": 91,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly addresses a common inheritance issue, matches the medium difficulty label, aligns well with the learning objective, and is clearly phrased.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Separating behaviors into independent classes, rather than relying solely on inheritance, helps avoid unwanted inherited behavior.",
+      "question_type": "True/False",
+      "topic": "Reusability",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": null
+      },
+      "feedback": "The question directly addresses reusability by focusing on composition vs inheritance, matches the medium difficulty label, aligns well with the learning objective, and is clearly phrased.",
+      "distractor_issues": []
+    },
+    {
+      "question": "According to the design principles described, how does encapsulating varying behaviors (such as flying and quacking in the SimUDuck example) increase a system's flexibility?",
+      "question_type": "MCQ",
+      "topic": "Flexibility",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 92,
+        "difficulty": 80,
+        "objective": 88,
+        "clarity": 90,
+        "distractors": 100
+      },
+      "feedback": "The question directly addresses flexibility by asking about behavior encapsulation, matches the medium difficulty label, aligns well with the learning objective, and is clearly worded.",
+      "distractor_issues": []
+    },
+    {
+      "question": "Reducing coupling helps keep changes localized, while high cohesion groups related responsibilities together.",
+      "question_type": "True/False",
+      "topic": "Coupling and Cohesion",
+      "quality_score": 90,
+      "scores": {
+        "relevance": 95,
+        "difficulty": 80,
+        "objective": 92,
+        "clarity": 90,
+        "distractors": null
+      },
+      "feedback": "The statement directly addresses core concepts of coupling and cohesion, matches a medium difficulty level, aligns well with the learning objective, and is clearly phrased.",
       "distractor_issues": []
     }
   ],
-  "duplicates": []
+  "duplicates": [
+    {
+      "question_a": 1,
+      "question_b": 2,
+      "semantic_similarity": 43.5,
+      "duplicate_score": 21,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 1,
+      "question_b": 3,
+      "semantic_similarity": 70.5,
+      "duplicate_score": 47,
+      "status": "Not Duplicate",
+      "reason": "Similar topic domain but different target concepts or answers."
+    },
+    {
+      "question_a": 1,
+      "question_b": 4,
+      "semantic_similarity": 46.3,
+      "duplicate_score": 23,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 1,
+      "question_b": 5,
+      "semantic_similarity": 58.5,
+      "duplicate_score": 29,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 1,
+      "question_b": 7,
+      "semantic_similarity": 45.5,
+      "duplicate_score": 22,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 1,
+      "question_b": 8,
+      "semantic_similarity": 30.6,
+      "duplicate_score": 15,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 3,
+      "question_b": 4,
+      "semantic_similarity": 55.6,
+      "duplicate_score": 27,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 3,
+      "question_b": 5,
+      "semantic_similarity": 79.1,
+      "duplicate_score": 70,
+      "status": "Review",
+      "reason": "High wording overlap and topic similarity."
+    },
+    {
+      "question_a": 3,
+      "question_b": 7,
+      "semantic_similarity": 41.5,
+      "duplicate_score": 20,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 4,
+      "question_b": 5,
+      "semantic_similarity": 54.6,
+      "duplicate_score": 27,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 5,
+      "question_b": 7,
+      "semantic_similarity": 36.4,
+      "duplicate_score": 18,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 6,
+      "question_b": 8,
+      "semantic_similarity": 32.3,
+      "duplicate_score": 16,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 6,
+      "question_b": 9,
+      "semantic_similarity": 42.7,
+      "duplicate_score": 21,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 7,
+      "question_b": 8,
+      "semantic_similarity": 55.7,
+      "duplicate_score": 27,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 8,
+      "question_b": 9,
+      "semantic_similarity": 37.1,
+      "duplicate_score": 18,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    },
+    {
+      "question_a": 8,
+      "question_b": 10,
+      "semantic_similarity": 36.3,
+      "duplicate_score": 18,
+      "status": "Not Duplicate",
+      "reason": "Distinct question targets and concepts."
+    }
+  ]
 }

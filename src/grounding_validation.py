@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -10,11 +11,11 @@ _client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 )
 
-LLM_MODEL = "openai/gpt-oss-20b"
+LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
-MAX_WORKERS = 4
+MAX_WORKERS = 3
 LLM_ATTEMPTS = 2
-MAX_OUTPUT_TOKENS = 500
+MAX_OUTPUT_TOKENS = 220
 
 _fast_mode = True
 
@@ -56,12 +57,33 @@ def load_source_pages(path="output/extracted_text.json"):
     return {page["page"]: page["text"] for page in pages}
 
 
+MAX_CHARS_PER_PAGE = 1100
+MAX_SOURCE_CHARS = 4000
+
+
 def get_source_text(source_pages, pages_by_number):
     parts = []
+    used = 0
+
     for page in source_pages or []:
         text = pages_by_number.get(page, "")
-        if text:
-            parts.append(f"[Page {page}]\n{text}")
+        if not text:
+            continue
+
+        text = text[:MAX_CHARS_PER_PAGE]
+
+        if used + len(text) > MAX_SOURCE_CHARS:
+            text = text[: max(0, MAX_SOURCE_CHARS - used)]
+
+        if not text:
+            break
+
+        parts.append(f"[Page {page}]\n{text}")
+        used += len(text)
+
+        if used >= MAX_SOURCE_CHARS:
+            break
+
     return "\n\n".join(parts)
 
 
@@ -97,11 +119,21 @@ Decide a verdict:
 Respond with STRICT JSON ONLY (no extra text, no markdown fences), in exactly this shape:
 {{
   "verdict": "Correct",
-  "reason": "short explanation of why this verdict was chosen",
+  "reason": "why, in at most 25 words",
   "supported_by_source": true
 }}
 """
     return prompt
+
+
+def retry_delay(error, attempt):
+    match = re.search(r"try again in ([0-9.]+)s", str(error))
+    if match:
+        try:
+            return min(float(match.group(1)) + 0.5, 25.0)
+        except ValueError:
+            pass
+    return 2.0 * (attempt + 1)
 
 
 def call_llm(prompt):
@@ -119,13 +151,22 @@ def call_llm(prompt):
         except Exception as e:
             last_error = e
             if attempt + 1 < LLM_ATTEMPTS:
-                time.sleep(2 * (attempt + 1))
+                time.sleep(retry_delay(e, attempt))
 
     raise last_error
 
 
 def parse_response(raw_output):
-    data = json.loads(raw_output.strip())
+    text = (raw_output or "").strip()
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start == -1 or end <= start:
+            raise ValueError(f"model returned no JSON: {text[:120]!r}")
+        data = json.loads(text[start:end + 1])
 
     verdict = data.get("verdict", "Unsupported")
     if verdict not in ("Correct", "Incorrect", "Unsupported"):
