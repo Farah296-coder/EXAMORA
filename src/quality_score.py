@@ -26,6 +26,8 @@ import itertools
 import json
 import os
 import re
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 from openai import OpenAI
@@ -57,6 +59,39 @@ WEIGHTS = {"relevance": 0.25, "difficulty": 0.20, "objective": 0.25, "clarity": 
 
 # Two questions with cosine similarity at or above this are flagged as duplicates.
 DUPLICATE_THRESHOLD = 0.85
+
+MAX_WORKERS = 4
+LLM_VERIFY_THRESHOLD = 0.65
+LLM_ATTEMPTS = 2
+MAX_OUTPUT_TOKENS = 700
+
+_fast_mode = True
+
+
+def fast_completion(client, messages, temperature, max_tokens=MAX_OUTPUT_TOKENS):
+    global _fast_mode
+
+    if _fast_mode:
+        try:
+            return client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body={"reasoning_effort": "low"},
+            )
+        except Exception as e:
+            text = str(e).lower()
+            if "rate" in text or "429" in text or "timeout" in text:
+                raise
+            _fast_mode = False
+
+    return client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
 
 
 # -----------------------------
@@ -127,18 +162,26 @@ def call_llm(prompt):
             api_key=api_key,
             base_url="https://api.groq.com/openai/v1",
         )
-    response = client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
-    return response.choices[0].message.content
+    messages = [
+        {
+            "role": "system",
+            "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary.",
+        },
+        {"role": "user", "content": prompt},
+    ]
+
+    last_error = None
+
+    for attempt in range(LLM_ATTEMPTS):
+        try:
+            response = fast_completion(client, messages, 0.2)
+            return response.choices[0].message.content
+        except Exception as e:
+            last_error = e
+            if attempt + 1 < LLM_ATTEMPTS:
+                time.sleep(2 * (attempt + 1))
+
+    raise last_error
 
 
 def parse_response(raw_output):
@@ -297,9 +340,8 @@ def analyze_candidate_pair(q1, q2, sem_sim, idx1, idx2):
                 "reason": f"Opposite True/False assertions ('{q1.get('correct_answer')}' vs '{q2.get('correct_answer')}') testing different concepts."
             }
 
-    # If LLM available, perform deep verification:
     api_key = os.environ.get("GROQ_API_KEY")
-    if api_key:
+    if api_key and sem_sim >= LLM_VERIFY_THRESHOLD:
         prompt = f"""
 You are an expert exam reviewer evaluating two candidate questions for duplicates.
 
@@ -400,42 +442,54 @@ def detect_duplicates(questions, threshold=0.30):
     except Exception:
         return []
 
-    duplicate_analysis = []
+    candidate_pairs = []
 
     for i, j in itertools.combinations(range(len(questions)), 2):
         sem_sim = cosine_similarity(embeddings[i], embeddings[j])
         if sem_sim >= threshold:
-            analysis = analyze_candidate_pair(questions[i], questions[j], sem_sim, i + 1, j + 1)
-            duplicate_analysis.append(analysis)
+            candidate_pairs.append((i, j, sem_sim))
 
-    return duplicate_analysis
+    if not candidate_pairs:
+        return []
+
+    def analyze(pair):
+        i, j, sem_sim = pair
+        return analyze_candidate_pair(questions[i], questions[j], sem_sim, i + 1, j + 1)
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        return list(pool.map(analyze, candidate_pairs))
 
 
 # -----------------------------
 # 7. Full pipeline for a whole exam
 # -----------------------------
 
+def score_one_safely(question_data):
+    try:
+        return score_question(question_data)
+    except Exception as e:
+        return {
+            "question": question_data.get("question"),
+            "question_type": question_data.get("question_type"),
+            "topic": question_data.get("topic"),
+            "quality_score": None,
+            "scores": None,
+            "feedback": f"scoring failed: {e}",
+            "distractor_issues": [],
+        }
+
+
 def evaluate_exam(questions):
-    results = []
+    print(f"Scoring {len(questions)} questions ({MAX_WORKERS} at a time)...")
 
-    for i, question_data in enumerate(questions, start=1):
-        print(f"[{i}/{len(questions)}] Scoring: {question_data.get('question')!r}")
+    if len(questions) <= 1:
+        results = [score_one_safely(question) for question in questions]
+    else:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+            results = list(pool.map(score_one_safely, questions))
 
-        try:
-            result = score_question(question_data)
-            results.append(result)
-            print(f"  -> quality_score={result['quality_score']}/100")
-        except Exception as e:
-            print(f"  Skipped -- failed to score this one: {e}")
-            results.append({
-                "question": question_data.get("question"),
-                "question_type": question_data.get("question_type"),
-                "topic": question_data.get("topic"),
-                "quality_score": None,
-                "scores": None,
-                "feedback": f"scoring failed: {e}",
-                "distractor_issues": [],
-            })
+    for i, result in enumerate(results, start=1):
+        print(f"[{i}/{len(results)}] quality_score={result['quality_score']} :: {result['question']!r}")
 
     duplicates = detect_duplicates(questions)
     for dup in duplicates:

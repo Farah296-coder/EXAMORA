@@ -615,6 +615,568 @@ render_html(
 
 
 # ============================================================
+# THEME HARDENING & UI POLISH
+# ============================================================
+
+render_html(
+    """
+    <style>
+
+    html, body, .stApp, [data-testid="stAppViewContainer"] {
+        color: #0f172a !important;
+        color-scheme: light !important;
+    }
+
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+    div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stMarkdownContainer"] li,
+    div[data-testid="stText"], p, li {
+        color: #334155;
+    }
+
+    div[data-testid="stMarkdownContainer"] strong { color: #1e1b4b; }
+
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+    .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+        color: #1e1b4b;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    div[data-testid="stCaptionContainer"],
+    div[data-testid="stCaptionContainer"] p { color: #64748b !important; }
+
+    /* Widget labels */
+    div[data-testid="stWidgetLabel"] p,
+    div[data-testid="stWidgetLabel"] label,
+    .stTextInput label, .stTextArea label,
+    .stSelectbox label, .stMultiSelect label,
+    .stNumberInput label, .stFileUploader label {
+        color: #475569 !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+    }
+
+    /* Text / number inputs and text areas */
+    div[data-baseweb="input"],
+    div[data-baseweb="base-input"],
+    div[data-baseweb="textarea"] {
+        background: #ffffff !important;
+        border-radius: 14px !important;
+    }
+
+    .stTextInput input,
+    .stNumberInput input,
+    .stTextArea textarea {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: #e2e8f0 !important;
+        border-radius: 14px !important;
+        font-size: 14px !important;
+    }
+
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder { color: #94a3b8 !important; }
+
+    div[data-baseweb="input"]:focus-within,
+    div[data-baseweb="textarea"]:focus-within {
+        border-color: #7c3aed !important;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.14) !important;
+    }
+
+    /* Select boxes and multiselect */
+    div[data-baseweb="select"] > div {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: #e2e8f0 !important;
+        border-radius: 14px !important;
+    }
+
+    div[data-baseweb="select"] svg { fill: #7c3aed !important; }
+
+    div[data-baseweb="popover"] div[role="listbox"],
+    div[data-baseweb="popover"] ul,
+    ul[role="listbox"] {
+        background: #ffffff !important;
+        border-radius: 14px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 18px 40px rgba(30, 20, 60, 0.12) !important;
+    }
+
+    li[role="option"], div[role="option"] { color: #0f172a !important; }
+
+    li[role="option"]:hover, div[role="option"]:hover {
+        background: #f5f3ff !important;
+        color: #5b21b6 !important;
+    }
+
+    span[data-baseweb="tag"] {
+        background: linear-gradient(135deg, #6d28d9, #7c3aed) !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+    }
+
+    span[data-baseweb="tag"] svg { fill: #ffffff !important; }
+
+    /* File uploader */
+    section[data-testid="stFileUploaderDropzone"],
+    div[data-testid="stFileUploader"] section {
+        background: linear-gradient(145deg, #ffffff, #faf8ff) !important;
+        border: 2px dashed #c4b5fd !important;
+        border-radius: 20px !important;
+        color: #334155 !important;
+    }
+
+    section[data-testid="stFileUploaderDropzone"] span,
+    section[data-testid="stFileUploaderDropzone"] small,
+    div[data-testid="stFileUploaderFile"] span,
+    div[data-testid="stFileUploaderFile"] small { color: #64748b !important; }
+
+    section[data-testid="stFileUploaderDropzone"] button {
+        background: #ffffff !important;
+        color: #5b21b6 !important;
+        border: 1px solid #c4b5fd !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+    }
+
+    /* Expanders */
+    div[data-testid="stExpander"] {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 18px !important;
+        box-shadow: 0 8px 22px rgba(30, 20, 60, 0.04) !important;
+        overflow: hidden !important;
+    }
+
+    div[data-testid="stExpander"] summary,
+    div[data-testid="stExpander"] summary p {
+        color: #1e1b4b !important;
+        font-weight: 700 !important;
+    }
+
+    div[data-testid="stExpander"] summary:hover,
+    div[data-testid="stExpander"] summary:hover p { color: #7c3aed !important; }
+
+    /* Secondary buttons */
+    div.stButton > button:not([kind="primary"]) {
+        background: #ffffff !important;
+        color: #4c1d95 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    div.stButton > button:not([kind="primary"]):hover {
+        border-color: #c4b5fd !important;
+        background: #faf8ff !important;
+        color: #5b21b6 !important;
+    }
+
+    /* Alerts, spinner, dividers */
+    div[data-testid="stAlert"] {
+        border-radius: 16px !important;
+        border: 1px solid rgba(124, 58, 237, 0.12) !important;
+    }
+
+    div[data-testid="stAlert"] p { color: inherit !important; }
+
+    div[data-testid="stSpinner"] p,
+    div[data-testid="stSpinner"] div { color: #5b21b6 !important; }
+
+    hr, div[data-testid="stDivider"] hr {
+        border-color: #e9e4f5 !important;
+        opacity: 1 !important;
+    }
+
+    /* Progress stepper */
+    .stepper {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 14px 18px;
+        margin-bottom: 26px;
+        box-shadow: 0 10px 30px rgba(30, 20, 60, 0.05);
+        overflow-x: auto;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        min-width: 150px;
+        padding: 6px 10px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .step-dot {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .step-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #94a3b8;
+        line-height: 1.2;
+    }
+
+    .step-desc {
+        font-size: 11px;
+        font-weight: 500;
+        color: #b4bdcb;
+    }
+
+    .step.done .step-dot {
+        background: #dcfce7;
+        color: #15803d;
+        border-color: #bbf7d0;
+    }
+
+    .step.done .step-name { color: #15803d; }
+    .step.done .step-desc { color: #86b79a; }
+
+    .step.active {
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.09), rgba(99, 102, 241, 0.06));
+        border: 1px solid rgba(124, 58, 237, 0.18);
+    }
+
+    .step.active .step-dot {
+        background: linear-gradient(135deg, #6d28d9, #7c3aed);
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 8px 18px rgba(109, 40, 217, 0.3);
+    }
+
+    .step.active .step-name { color: #5b21b6; }
+    .step.active .step-desc { color: #8b7bb8; }
+
+    .step-line {
+        width: 26px;
+        min-width: 14px;
+        align-self: center;
+        height: 2px;
+        background: linear-gradient(90deg, #e2e8f0, #ddd6fe);
+        border-radius: 2px;
+    }
+
+    /* Compact hero used on the inner pages */
+    .hero-compact {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #3b0764 0%, #5b21b6 45%, #6d28d9 100%);
+        border-radius: 22px;
+        padding: 18px 24px;
+        color: #ffffff;
+        margin-bottom: 22px;
+        box-shadow: 0 16px 40px rgba(91, 33, 182, 0.18);
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-compact-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+
+    .hero-compact-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.4px;
+    }
+
+    .hero-compact-text {
+        font-size: 12.5px;
+        opacity: 0.85;
+        line-height: 1.5;
+    }
+
+    /* Readability of the grounding cards */
+    .grounding-card strong { color: #0f172a !important; font-size: 14px !important; }
+
+    .grounding-card > div {
+        color: #475569 !important;
+        font-size: 13px !important;
+        line-height: 1.65 !important;
+    }
+
+    .grounded { background: linear-gradient(90deg, #f0fdf4, rgba(255, 255, 255, 0.95)) !important; }
+    .not-grounded { background: linear-gradient(90deg, #fffbeb, rgba(255, 255, 255, 0.95)) !important; }
+    .not-evaluated { background: linear-gradient(90deg, #f8fafc, rgba(255, 255, 255, 0.95)) !important; }
+
+    /* Uploaded file strip */
+    .file-ready {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: linear-gradient(135deg, #f0fdf4, #ffffff);
+        border: 1px solid #bbf7d0;
+        border-radius: 18px;
+        padding: 14px 18px;
+        margin-top: 14px;
+        box-shadow: 0 8px 22px rgba(22, 163, 74, 0.07);
+    }
+
+    .file-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 13px;
+        background: #dcfce7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .file-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #14532d;
+        word-break: break-all;
+    }
+
+    .file-status {
+        font-size: 12px;
+        font-weight: 600;
+        color: #16a34a;
+    }
+
+    /* Quality hero score ring */
+    .quality-hero {
+        border-radius: 26px;
+        padding: 28px;
+        margin-bottom: 8px;
+    }
+
+    .quality-score-ring {
+        width: 132px;
+        height: 132px;
+        min-width: 132px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 14px 35px rgba(124, 58, 237, 0.18);
+    }
+
+    .quality-score-inner {
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .quality-big-score {
+        font-family: 'Poppins', sans-serif;
+        font-size: 36px;
+        font-weight: 900;
+        line-height: 1;
+        color: #5b21b6;
+    }
+
+    .quality-score-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        letter-spacing: 0.5px;
+    }
+
+    .quality-message {
+        font-family: 'Poppins', sans-serif;
+        font-size: 19px;
+        font-weight: 800;
+        color: #1e1b4b;
+        margin-bottom: 6px;
+    }
+
+    .quality-description {
+        font-size: 13px;
+        line-height: 1.7;
+        color: #64748b;
+        max-width: 640px;
+    }
+
+    /* Per-question quality rows */
+    .quality-question {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--border);
+        border-left: 6px solid #94a3b8;
+        border-radius: 16px;
+        padding: 16px 18px;
+        margin: 10px 0;
+        box-shadow: 0 8px 22px rgba(30, 20, 60, 0.035);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .quality-question:hover {
+        transform: translateX(3px);
+        box-shadow: 0 12px 28px rgba(109, 40, 217, 0.08);
+    }
+
+    .quality-question.good { border-left-color: #22c55e; background: linear-gradient(90deg, #f0fdf4, rgba(255, 255, 255, 0.95)); }
+    .quality-question.review { border-left-color: #f59e0b; background: linear-gradient(90deg, #fffbeb, rgba(255, 255, 255, 0.95)); }
+    .quality-question.bad { border-left-color: #dc2626; background: linear-gradient(90deg, #fef2f2, rgba(255, 255, 255, 0.95)); }
+    .quality-question.pending { border-left-color: #94a3b8; background: linear-gradient(90deg, #f8fafc, rgba(255, 255, 255, 0.95)); }
+
+    .quality-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .quality-question-number {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        color: #1e1b4b;
+    }
+
+    .quality-question-text {
+        font-size: 13px;
+        line-height: 1.65;
+        color: #475569;
+    }
+
+    .quality-status {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    .quality-score-pill {
+        padding: 5px 13px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+        border: 1px solid transparent;
+    }
+
+    .score-good { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+    .score-review { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .score-bad { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+    .score-pending { background: #f1f5f9; color: #64748b; border-color: #e2e8f0; }
+
+    /* Export cards */
+    .export-card {
+        border-radius: 22px;
+        padding: 24px;
+        margin-bottom: 14px;
+        text-align: center;
+    }
+
+    .export-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        margin: 0 auto 14px auto;
+        background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+        border: 1px solid #ddd6fe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+    }
+
+    .export-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        color: #1e1b4b;
+        margin-bottom: 6px;
+    }
+
+    .export-description {
+        font-size: 13px;
+        line-height: 1.65;
+        color: #64748b;
+        min-height: 42px;
+    }
+
+    /* Similar-question cards */
+    .similar-card {
+        box-shadow: 0 8px 22px rgba(30, 20, 60, 0.04);
+        transition: all 0.3s ease;
+    }
+
+    .similar-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(30, 20, 60, 0.08);
+    }
+
+    /* Calmer motion */
+    .main-card:hover, .question-card:hover, .export-card:hover,
+    .upload-card:hover, .quality-question:hover, .similar-card:hover,
+    div[data-testid="stMetric"]:hover,
+    div.stButton > button:hover,
+    div[data-testid="stRadio"] label:hover,
+    .nav-logo:hover, .hero-pill:hover {
+        transform: none !important;
+    }
+
+    .nav-logo {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        font-size: 20px;
+        letter-spacing: 0.5px;
+    }
+
+    .section-label { margin: 30px 0 12px 0; }
+
+    .page-subtitle { max-width: 860px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+        background: #ddd6fe;
+        border-radius: 999px;
+        border: 2px solid #f8fafc;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #c4b5fd; }
+
+    </style>
+    """
+)
+
+
+# ============================================================
 # API
 # ============================================================
 
@@ -726,7 +1288,7 @@ def clean_question_data(question):
 
     # Normalize True/False type strings
     q_type = str(cleaned.get("question_type", "")).strip()
-    if q_type.lower() in ["true/false", "true or false", "t/f", "tf", "true_false"]:
+    if q_type.lower() in ["true/false", "true-false", "true or false", "t/f", "tf", "true_false"]:
         cleaned["question_type"] = "True/False"
 
     choices = cleaned.get("choices")
@@ -750,6 +1312,8 @@ def clean_exam_data(exam):
 # ============================================================
 
 def get_duplicate_pairs(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
     for key in ["duplicates", "similar_pairs", "pairs", "results"]:
@@ -760,6 +1324,8 @@ def get_duplicate_pairs(data):
 
 
 def get_quality_items(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
     for key in ["results", "questions", "quality_results", "scores", "items"]:
@@ -812,6 +1378,8 @@ def get_overall_quality(data, items):
 
 
 def get_grounding_items(data):
+    if isinstance(data, list):
+        return data
     if not isinstance(data, dict):
         return []
 
@@ -885,6 +1453,24 @@ def normalize_verdict(verdict):
         return "supported"
 
     return "not_evaluated"
+
+
+def find_grounding_item(items, question, index):
+    question_text = ""
+    if isinstance(question, dict):
+        question_text = clean_display_text(question.get("question", ""))
+
+    if question_text:
+        for item in items:
+            if isinstance(item, dict):
+                item_text = clean_display_text(item.get("question", ""))
+                if item_text and item_text == question_text:
+                    return item
+
+    if index < len(items):
+        return items[index]
+
+    return None
 
 
 def get_similarity(item):
@@ -1025,6 +1611,10 @@ defaults = {
     "generated": False,
     "uploaded_pdf_name": None,
     "pdf_processed": False,
+    "processed_file_key": None,
+    "failed_file_key": None,
+    "pdf_pages": 0,
+    "pdf_chunks": 0,
     "num_questions": 10,
     "question_types": ["MCQ"],
     "difficulty_levels": ["Medium"],
@@ -1045,9 +1635,10 @@ for topic in st.session_state.topics:
 # ============================================================
 
 pdf_badge_html = (
-    f'<div class="nav-pdf-badge ready">📄 {html.escape(st.session_state.uploaded_pdf_name or "PDF Ready")}</div>'
+    f'<div class="nav-pdf-badge ready">Source: {html.escape(st.session_state.uploaded_pdf_name or "PDF")}'
+    f' · {st.session_state.pdf_pages} pages</div>'
     if st.session_state.pdf_processed
-    else '<div class="nav-pdf-badge empty">📄 No PDF Source</div>'
+    else '<div class="nav-pdf-badge empty">No source PDF yet</div>'
 )
 
 render_html(
@@ -1056,18 +1647,14 @@ render_html(
         <div class="top-navbar-content">
 
             <div class="nav-brand">
-                <div class="nav-logo">🎓</div>
+                <div class="nav-logo">E</div>
                 <div class="nav-brand-text">
                     <div class="nav-title">Exa<span>mora</span></div>
-                    <div class="nav-subtitle">Intelligent Assessment Platform</div>
+                    <div class="nav-subtitle">Exam builder for your own course material</div>
                 </div>
             </div>
 
             <div class="nav-center-status">
-                <div class="status-badge">
-                    <span class="status-dot-pulse"></span>
-                    AI Engine Online
-                </div>
                 {pdf_badge_html}
             </div>
 
@@ -1082,15 +1669,15 @@ def navigate_to(page_name):
 
 
 # Horizontal Pill Tab Menu
-tabs = ["✨ Create", "📝 Review", "⭐ Quality", "📥 Export"]
+tabs = ["Create", "Review", "Quality", "Export"]
 tab_map = {
-    "Create": "✨ Create",
-    "Review": "📝 Review",
-    "Quality": "⭐ Quality",
-    "Export": "📥 Export",
+    "Create": "Create",
+    "Review": "Review",
+    "Quality": "Quality",
+    "Export": "Export",
 }
 
-target_tab = tab_map.get(st.session_state.page, "✨ Create")
+target_tab = tab_map.get(st.session_state.page, "Create")
 st.session_state["main_top_nav_bar"] = target_tab
 
 selected_nav = st.radio(
@@ -1106,38 +1693,46 @@ st.session_state.page = clean_nav_name
 
 
 # ============================================================
-# HERO BANNER
+# PROGRESS STEPPER
 # ============================================================
 
+WORKFLOW_STEPS = [
+    ("Create", "Upload & generate"),
+    ("Review", "Edit questions"),
+    ("Quality", "Validate & ground"),
+    ("Export", "Download exam"),
+]
+
+step_names = [step_name for step_name, _ in WORKFLOW_STEPS]
+
+current_step = (
+    step_names.index(st.session_state.page)
+    if st.session_state.page in step_names
+    else 0
+)
+
+step_blocks = []
+
+for step_index, (step_name, step_description) in enumerate(WORKFLOW_STEPS):
+    if step_index < current_step:
+        step_state, marker = "done", "✓"
+    elif step_index == current_step:
+        step_state, marker = "active", str(step_index + 1)
+    else:
+        step_state, marker = "todo", str(step_index + 1)
+
+    step_blocks.append(
+        f'<div class="step {step_state}">'
+        f'<div class="step-dot">{marker}</div>'
+        f'<div><div class="step-name">{step_name}</div>'
+        f'<div class="step-desc">{step_description}</div></div>'
+        f'</div>'
+    )
+
 render_html(
-    """
-    <div class="hero">
-        <div class="hero-content">
-
-            <div class="hero-badge">
-                ✨ Next-Gen Assessment Workspace
-            </div>
-
-            <h1>
-                Build smarter exams<br>
-                from your learning material.
-            </h1>
-
-            <p>
-                Upload your course material, generate questions grounded in your PDF,
-                review every question, validate quality, and export a polished exam.
-            </p>
-
-            <div class="hero-pills">
-                <div class="hero-pill">📄 PDF Grounding</div>
-                <div class="hero-pill">🤖 AI Generation</div>
-                <div class="hero-pill">⭐ Quality Analysis</div>
-                <div class="hero-pill">📚 Source Validation</div>
-            </div>
-
-        </div>
-    </div>
-    """
+    '<div class="stepper">'
+    + '<div class="step-line"></div>'.join(step_blocks)
+    + '</div>'
 )
 
 
@@ -1147,10 +1742,11 @@ render_html(
 
 if st.session_state.page == "Create":
 
-    render_html('<div class="page-title">Create Exam</div>')
+    render_html('<div class="page-title">Create exam</div>')
     render_html(
         '<div class="page-subtitle">'
-        'Configure your exam and use your learning material as the AI knowledge source.'
+        'Step 1 of 4 &mdash; add the PDF your questions should come from, then choose what the exam '
+        'should contain. Every question is written from the text of that PDF only.'
         '</div>'
     )
 
@@ -1159,10 +1755,11 @@ if st.session_state.page == "Create":
         """
         <div class="upload-card">
             <div class="upload-icon">📄</div>
-            <div class="upload-title">Upload your learning material</div>
+            <div class="upload-title">1. Source material</div>
             <div class="upload-description">
-                Add lecture notes, textbook chapters, course PDFs, study guides,
-                or any educational material you want the generated exam to be based on.
+                Lecture notes, a textbook chapter, a course PDF &mdash; anything the exam should be based on.
+                As soon as you pick a file it is read page by page and indexed, so the AI can look up the
+                right passage for every question. This happens once per file and takes a few seconds.
             </div>
         </div>
         """
@@ -1177,22 +1774,32 @@ if st.session_state.page == "Create":
 
     if uploaded_pdf is not None:
 
-        render_html(
-            f"""
-            <div class="file-ready">
-                <div class="file-icon">📄</div>
-                <div>
-                    <div class="file-name">{html.escape(uploaded_pdf.name)}</div>
-                    <div class="file-status">PDF selected · Ready to process</div>
+        file_key = f"{uploaded_pdf.name}:{uploaded_pdf.size}"
+
+        already_indexed = st.session_state.processed_file_key == file_key
+        already_failed = st.session_state.failed_file_key == file_key
+
+        if already_indexed:
+            render_html(
+                f"""
+                <div class="file-ready">
+                    <div class="file-icon">✓</div>
+                    <div>
+                        <div class="file-name">{html.escape(uploaded_pdf.name)}</div>
+                        <div class="file-status">
+                            Indexed · {st.session_state.pdf_pages} pages · {st.session_state.pdf_chunks} searchable sections
+                        </div>
+                    </div>
                 </div>
-            </div>
-            """
-        )
+                """
+            )
 
-        render_html("")
+        if already_failed and st.button("Try reading the PDF again", use_container_width=True):
+            st.session_state.failed_file_key = None
+            st.rerun()
 
-        if st.button("⚡ Process PDF", type="primary", use_container_width=True):
-            with st.spinner("Processing your PDF..."):
+        if not already_indexed and not already_failed:
+            with st.spinner("Reading your PDF and indexing it for the AI..."):
                 try:
                     response = requests.post(
                         f"{API_URL}/api/upload-pdf",
@@ -1207,7 +1814,8 @@ if st.session_state.page == "Create":
                     )
 
                     if response.status_code == 429:
-                        st.warning("⏳ The AI service is temporarily rate-limited.")
+                        st.session_state.failed_file_key = file_key
+                        st.warning("The AI service is temporarily rate-limited. Wait a moment and try again.")
                     else:
                         response.raise_for_status()
                         result = response.json()
@@ -1216,26 +1824,30 @@ if st.session_state.page == "Create":
                             data = result.get("data", {})
                             st.session_state.uploaded_pdf_name = data.get("filename", uploaded_pdf.name)
                             st.session_state.pdf_processed = True
+                            st.session_state.processed_file_key = file_key
+                            st.session_state.failed_file_key = None
+                            st.session_state.pdf_pages = data.get("pages", 0)
+                            st.session_state.pdf_chunks = data.get("chunks", 0)
                             st.session_state.exam = []
                             st.session_state.quality = None
                             st.session_state.duplicates = None
                             st.session_state.grounding = None
                             st.session_state.generated = False
-
-                            st.success(
-                                f"PDF ready — {data.get('pages', 0)} pages, {data.get('chunks', 0)} chunks."
-                            )
                             st.rerun()
                         else:
                             st.session_state.pdf_processed = False
-                            st.error(result.get("error", "PDF processing failed."))
+                            st.session_state.failed_file_key = file_key
+                            st.error(result.get("error", "Could not read this PDF."))
 
                 except requests.exceptions.ConnectionError:
-                    st.error("❌ Cannot connect to FastAPI backend.")
+                    st.session_state.failed_file_key = file_key
+                    st.error("Cannot reach the backend. Make sure the API window is still open.")
                 except requests.exceptions.Timeout:
-                    st.error("⏳ PDF processing timed out.")
+                    st.session_state.failed_file_key = file_key
+                    st.error("Reading the PDF took too long. Try a smaller file.")
                 except Exception as e:
-                    st.error(f"❌ Upload failed: {e}")
+                    st.session_state.failed_file_key = file_key
+                    st.error(f"Upload failed: {e}")
 
     # Configuration
     render_html(
@@ -1342,10 +1954,12 @@ if st.session_state.page == "Create":
 
 elif st.session_state.page == "Review":
 
-    render_html('<div class="page-title">Review Questions</div>')
+    render_html('<div class="page-title">Review questions</div>')
     render_html(
         '<div class="page-subtitle">'
-        'Inspect every generated question, edit it, or regenerate it before validation.'
+        'Step 2 of 4 &mdash; read what the AI wrote. Fix any wording or answer directly in the boxes; '
+        'your edits are kept. If a question is weak, open &ldquo;Regenerate this question&rdquo; and the '
+        'AI writes a new one on the same topic.'
         '</div>'
     )
 
@@ -1353,7 +1967,9 @@ elif st.session_state.page == "Review":
     st.session_state.exam = exam
 
     if not exam:
-        st.info("No exam has been generated yet.")
+        st.info("Nothing to review yet. Upload a PDF and generate an exam on the Create page first.")
+        if st.button("Go to Create", type="primary"):
+            navigate_to("Create")
     else:
         grounded_count = sum(1 for q in exam if q.get("source_pages") or q.get("source_page"))
 
@@ -1475,8 +2091,16 @@ elif st.session_state.page == "Review":
                         new_q_dict = {}
 
                         if isinstance(regenerated, dict):
-                            if isinstance(regenerated.get("question"), dict):
-                                new_q_dict = dict(regenerated["question"])
+                            for wrapper_key in [
+                                "final_question",
+                                "regenerated_question",
+                                "new_question",
+                                "question",
+                            ]:
+                                wrapped = regenerated.get(wrapper_key)
+                                if isinstance(wrapped, dict):
+                                    new_q_dict = dict(wrapped)
+                                    break
                             else:
                                 new_q_dict = dict(regenerated)
                         elif isinstance(regenerated, str):
@@ -1488,6 +2112,15 @@ elif st.session_state.page == "Review":
 
                         new_q_dict["question_type"] = selected_type
                         new_q_dict["difficulty"] = selected_difficulty
+
+                        for carried_key in [
+                            "source_pages",
+                            "source_page",
+                            "topic",
+                            "learning_objective",
+                        ]:
+                            if not new_q_dict.get(carried_key) and question.get(carried_key):
+                                new_q_dict[carried_key] = question.get(carried_key)
 
                         if selected_type == "True/False":
                             new_q_dict["choices"] = ["True", "False"]
@@ -1531,10 +2164,12 @@ elif st.session_state.page == "Review":
 
 elif st.session_state.page == "Quality":
 
-    render_html('<div class="page-title">Quality Center</div>')
+    render_html('<div class="page-title">Quality checks</div>')
     render_html(
         '<div class="page-subtitle">'
-        'Analyze quality, detect similar questions, and validate the generated exam against your PDF.'
+        'Step 3 of 4 &mdash; the AI reads every question back and reports three things: how well it is '
+        'written, whether two questions ask the same thing, and whether the answer really appears in '
+        'your PDF. Each check asks the model about every question, so expect a few seconds per question.'
         '</div>'
     )
 
@@ -1542,30 +2177,46 @@ elif st.session_state.page == "Quality":
     st.session_state.exam = exam
 
     if not exam:
-        st.info("No exam available.")
+        st.info("There is no exam to check yet. Generate one on the Create page first.")
+        if st.button("Go to Create", type="primary"):
+            navigate_to("Create")
     else:
+        run_all = st.button(
+            f"Run all checks on {len(exam)} questions",
+            type="primary",
+            use_container_width=True,
+        )
+
         a1, a2, a3 = st.columns(3)
 
         with a1:
-            if st.button("⭐ Check Quality", use_container_width=True):
-                with st.spinner("Evaluating question quality..."):
-                    result = api_call("POST", "/api/quality-score", json={"questions": exam})
-                if result is not None:
-                    st.session_state.quality = result
+            run_quality = st.button("Score writing quality", use_container_width=True)
 
         with a2:
-            if st.button("🔍 Check Similarity", use_container_width=True):
-                with st.spinner("Checking similar questions..."):
-                    result = api_call("POST", "/api/duplicates", json={"questions": exam})
-                if result is not None:
-                    st.session_state.duplicates = result
+            run_duplicates = st.button("Find repeated questions", use_container_width=True)
 
         with a3:
-            if st.button("📚 Check Grounding", use_container_width=True):
-                with st.spinner("Checking questions against your PDF..."):
-                    result = api_call("POST", "/api/validate", json={"questions": exam})
-                if result is not None:
-                    st.session_state.grounding = result
+            run_grounding = st.button("Check against the PDF", use_container_width=True)
+
+        if run_all or run_quality:
+            with st.spinner("Scoring how well each question is written..."):
+                result = api_call("POST", "/api/quality-score", json={"questions": exam})
+            if result is not None:
+                st.session_state.quality = result
+                if isinstance(result, dict) and isinstance(result.get("duplicates"), list):
+                    st.session_state.duplicates = {"duplicates": result["duplicates"]}
+
+        if run_duplicates:
+            with st.spinner("Comparing the questions with each other..."):
+                result = api_call("POST", "/api/duplicates", json={"questions": exam})
+            if result is not None:
+                st.session_state.duplicates = result
+
+        if run_all or run_grounding:
+            with st.spinner("Looking for each answer in your PDF..."):
+                result = api_call("POST", "/api/validate", json={"questions": exam})
+            if result is not None:
+                st.session_state.grounding = result
 
         st.divider()
 
@@ -1662,10 +2313,22 @@ elif st.session_state.page == "Quality":
 
             duplicate_items = get_duplicate_pairs(st.session_state.duplicates)
 
-            if not duplicate_items:
-                st.success("✓ No candidate duplicate question pairs were detected.")
+            flagged_items = [
+                item for item in duplicate_items
+                if isinstance(item, dict) and item.get("status") in ("Duplicate", "Review")
+            ]
+
+            if not flagged_items:
+                st.success(
+                    f"No repeated questions. {len(duplicate_items)} question pairs were compared "
+                    "and all of them test something different."
+                )
             else:
-                for pair_index, item in enumerate(duplicate_items):
+                st.caption(
+                    f"{len(flagged_items)} of {len(duplicate_items)} compared pairs need a look. "
+                    "The rest test different concepts and are not shown."
+                )
+                for pair_index, item in enumerate(flagged_items):
                     if not isinstance(item, dict):
                         continue
                     q1 = item.get("question_a", item.get("question1", pair_index + 1))
@@ -1718,7 +2381,7 @@ elif st.session_state.page == "Quality":
             grounding_items = get_grounding_items(st.session_state.grounding)
 
             for index, question in enumerate(exam):
-                item = grounding_items[index] if index < len(grounding_items) else None
+                item = find_grounding_item(grounding_items, question, index)
                 verdict_raw = get_grounding_verdict(item) if item else None
                 normalized = normalize_verdict(verdict_raw)
                 question_text = clean_display_text(question.get("question", ""))
@@ -1764,10 +2427,11 @@ elif st.session_state.page == "Quality":
 
 elif st.session_state.page == "Export":
 
-    render_html('<div class="page-title">Export Exam</div>')
+    render_html('<div class="page-title">Export exam</div>')
     render_html(
         '<div class="page-subtitle">'
-        'Your exam is ready. Download the student version, answer key, or JSON backup.'
+        'Step 4 of 4 &mdash; take the paper with you: a clean PDF for students, the same paper with the '
+        'answers for you, or a JSON copy you can load back later.'
         '</div>'
     )
 
@@ -1775,7 +2439,9 @@ elif st.session_state.page == "Export":
     st.session_state.exam = exam
 
     if not exam:
-        st.info("No exam available.")
+        st.info("There is no exam to export yet. Generate one on the Create page first.")
+        if st.button("Go to Create", type="primary"):
+            navigate_to("Create")
     else:
         quality_value = "Not checked"
         if st.session_state.quality is not None:

@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 
 from exam_blueprint import build_blueprint_from_file, build_generation_requests
 from question_generator import QUESTION_TYPES, call_llm
@@ -157,11 +158,23 @@ def parse_response(raw_output: str, request: dict, source_pages: list) -> dict:
 
     try:
         data = json.loads(raw_output)
-    except json.JSONDecodeError as e:
-        raise ValueError(
-            f"LLM did not return valid JSON: {e}\n"
-            f"Raw output:\n{raw_output}"
-        )
+    except json.JSONDecodeError as first_error:
+        start = raw_output.find("{")
+        end = raw_output.rfind("}")
+
+        if start == -1 or end <= start:
+            raise ValueError(
+                f"LLM did not return valid JSON: {first_error}\n"
+                f"Raw output:\n{raw_output}"
+            )
+
+        try:
+            data = json.loads(raw_output[start:end + 1])
+        except json.JSONDecodeError as second_error:
+            raise ValueError(
+                f"LLM did not return valid JSON: {second_error}\n"
+                f"Raw output:\n{raw_output}"
+            )
 
     structured = {
         "topic": request["topic"],
@@ -192,23 +205,47 @@ def generate_one(request: dict) -> dict:
     )
 
 
+MAX_WORKERS = 6
+
+
+def try_generate(request: dict):
+    try:
+        return generate_one(request), None
+    except Exception as e:
+        return None, e
+
+
+def run_batch(requests: list, label: str):
+    if not requests:
+        return [], []
+
+    print(f"{label}: {len(requests)} questions, {MAX_WORKERS} at a time...")
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        outcomes = list(pool.map(try_generate, requests))
+
+    done = []
+    failed = []
+
+    for request, (question, error) in zip(requests, outcomes):
+        if question is not None:
+            done.append(question)
+        else:
+            print(f"  {request['question_type']} on '{request['topic']}' failed: {error}")
+            failed.append(request)
+
+    return done, failed
+
+
 def generate_exam(requests: list) -> list:
-    exam = []
+    exam, failed = run_batch(requests, "Generating")
 
-    for i, request in enumerate(requests, start=1):
-        print(
-            f"[{i}/{len(requests)}] Generating "
-            f"{request['question_type']} "
-            f"({request['difficulty']}) "
-            f"on '{request['topic']}'..."
-        )
+    if failed:
+        recovered, dropped = run_batch(failed, "Retrying")
+        exam.extend(recovered)
 
-        try:
-            question = generate_one(request)
-            exam.append(question)
-
-        except Exception as e:
-            print(f"  Skipped, failed to generate this one: {e}")
+        for request in dropped:
+            print(f"  Dropped after retry: {request['question_type']} on '{request['topic']}'")
 
     return exam
 

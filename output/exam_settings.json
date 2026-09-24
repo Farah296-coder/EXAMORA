@@ -1,14 +1,52 @@
 {
   "num_questions": 10,
   "question_types": [
-    "MCQ"
+    "MCQ",
+    "Short Answer",
+    "True/False"
   ],
   "difficulty_levels": [
     "Medium"
   ],
   "topics": [
     {
-      "topic": "oop",
+      "topic": "Software Design Patterns",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Course References",
+      "learning_objectives": []
+    },
+    {
+      "topic": "What is Good Software Design?",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Why Software Design must Handle Change",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Maintainability",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Example: SimUDuck",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Problems with Inheritance",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Reusability",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Flexibility",
+      "learning_objectives": []
+    },
+    {
+      "topic": "Coupling and Cohesion",
       "learning_objectives": []
     }
   ]

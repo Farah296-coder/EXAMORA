@@ -1,4 +1,5 @@
 import json
+import time
 import os
 import re
 
@@ -130,28 +131,66 @@ Generate exactly ONE question.
 
     return prompt
 
-def call_llm(prompt: str) -> str:
+LLM_ATTEMPTS = 3
+MAX_OUTPUT_TOKENS = 900
 
-    response = _client.chat.completions.create(
+_fast_mode = True
+
+
+def fast_completion(client, messages, temperature, max_tokens=MAX_OUTPUT_TOKENS):
+    global _fast_mode
+
+    if _fast_mode:
+        try:
+            return client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body={"reasoning_effort": "low"},
+            )
+        except Exception as e:
+            text = str(e).lower()
+            if "rate" in text or "429" in text or "timeout" in text:
+                raise
+            _fast_mode = False
+
+    return client.chat.completions.create(
         model=LLM_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are an exam-generation assistant. "
-                    "Return strict valid JSON only. "
-                    "Never return HTML or Markdown."
-                ),
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            },
-        ],
-        temperature=0.8,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
     )
 
-    return response.choices[0].message.content
+
+def call_llm(prompt: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are an exam-generation assistant. "
+                "Return strict valid JSON only. "
+                "Never return HTML or Markdown."
+            ),
+        },
+        {
+            "role": "user",
+            "content": prompt,
+        },
+    ]
+
+    last_error = None
+
+    for attempt in range(LLM_ATTEMPTS):
+        try:
+            response = fast_completion(_client, messages, 0.8)
+            return response.choices[0].message.content
+        except Exception as e:
+            last_error = e
+            if attempt + 1 < LLM_ATTEMPTS:
+                time.sleep(2 * (attempt + 1))
+
+    raise last_error
 
 
 def parse_llm_response(

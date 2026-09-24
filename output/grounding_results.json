@@ -1,132 +1,135 @@
 [
   {
-    "question": "In the generic method signature public static > T maximum(T x, T y, T z), what is the role of the clause T extends Comparable?",
-    "question_type": "Short Answer",
-    "topic": null,
+    "question": "Which of the following is NOT listed as a benefit of parallel computing in the lecture?",
+    "question_type": "MCQ",
+    "topic": "High Performance Computing",
     "learning_objective": null,
-    "source_pages": [],
-    "verdict": "Unsupported",
-    "reason": "The source text does not contain any information about the generic method signature or the T extends Comparable clause, so the question cannot be verified.",
+    "source_pages": [
+      1,
+      6,
+      10,
+      12
+    ],
+    "verdict": "Correct",
+    "reason": "The source lists benefits such as solving memory‑limited problems, speeding up unsolvable problems, and processing large data volumes, but does not mention cost reduction.",
+    "supported_by_source": true
+  },
+  {
+    "question": "Explain why a solid background in C/C++ programming is considered a prerequisite for this high‑performance computing course.",
+    "question_type": "Short Answer",
+    "topic": "Prerequisites",
+    "learning_objective": null,
+    "source_pages": [
+      2,
+      4,
+      1,
+      10
+    ],
+    "verdict": "Correct",
+    "reason": "The question directly references the source statement that students must be strong C/C++ programmers due to exposure to C-like parallel languages, and the marked answer accurately reflects this.",
+    "supported_by_source": true
+  },
+  {
+    "question": "The final exam contributes 40% to the overall course grade.",
+    "question_type": "True/False",
+    "topic": "Textbooks",
+    "learning_objective": null,
+    "source_pages": [
+      4,
+      1,
+      35,
+      3
+    ],
+    "verdict": "Correct",
+    "reason": "The source text explicitly states that the final exam contributes 40% to the overall course grade.",
+    "supported_by_source": true
+  },
+  {
+    "question": "A student earned 85% on the combined quizzes and attendance component, 78% on the two midterm exams, and 92% on the final exam. What is the student's overall course score?",
+    "question_type": "MCQ",
+    "topic": "Course Assesments",
+    "learning_objective": null,
+    "source_pages": [
+      4,
+      2,
+      23,
+      24
+    ],
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6895, Requested 1269. Please try again in 1.23s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
     "supported_by_source": false
   },
   {
-    "question": "Which of the following statements is true regarding the use of primitive types in generic type variables?",
-    "question_type": "MCQ",
-    "topic": "oop",
+    "question": "Describe the main difference between SIMD and MIMD in Flynn’s taxonomy.",
+    "question_type": "Short Answer",
+    "topic": "Outline",
     "learning_objective": null,
     "source_pages": [
-      11,
-      2,
-      3,
-      10
+      32,
+      1,
+      24,
+      25
+    ],
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6846, Requested 1691. Please try again in 4.0275s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "supported_by_source": false
+  },
+  {
+    "question": "HPC requires a single high-performance server to aggregate computing power.",
+    "question_type": "True/False",
+    "topic": "High Performance Computing (HPC) refers to the",
+    "learning_objective": null,
+    "source_pages": [
+      6,
+      7,
+      1
+    ],
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198986, Requested 2485. Please try again in 10m35.472s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "supported_by_source": false
+  },
+  {
+    "question": "Which statement best explains why High Performance Computing (HPC) is valuable for scientific research?",
+    "question_type": "MCQ",
+    "topic": "HPC: What for?",
+    "learning_objective": null,
+    "source_pages": [
+      7,
+      6,
+      33
     ],
     "verdict": "Correct",
-    "reason": "The source text explicitly states that primitive types cannot be used as type variables and that wrapper classes must be used instead.",
+    "reason": "The source text states that HPC processes huge volumes of data at very high speeds using multiple computers and storage devices, which matches the marked answer.",
     "supported_by_source": true
   },
   {
-    "question": "In the generic method 'maximum', why is the type parameter declared as '>' rather than just ''?",
-    "question_type": "MCQ",
-    "topic": "oop",
+    "question": "Name two limitations of single CPU computing that parallel computing can address, as mentioned in the text.",
+    "question_type": "Short Answer",
+    "topic": "What is Parallel Computing?",
     "learning_objective": null,
     "source_pages": [
-      11,
-      2,
-      3,
-      10
+      10,
+      8,
+      12,
+      9
     ],
     "verdict": "Correct",
-    "reason": "The source text shows the method signature uses <T extends Comparable<T>> to guarantee that T has a compareTo method, matching the marked answer.",
+    "reason": "The source text lists the two limitations of single CPU computing as available memory and performance, matching the marked answer.",
     "supported_by_source": true
   },
   {
-    "question": "Why is the declaration ArrayList invalid in Java generics?",
-    "question_type": "MCQ",
-    "topic": "oop",
+    "question": "A parallel program can achieve perfect speedup even if it contains serial sections.",
+    "question_type": "True/False",
+    "topic": "Serial Computing- vs - Parallel Computing",
     "learning_objective": null,
     "source_pages": [
-      11,
-      2,
-      3,
-      10
+      9,
+      10,
+      18,
+      12
     ],
-    "verdict": "Correct",
-    "reason": "The source text explicitly states that primitive types cannot be used as type variables in generic classes, matching the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "When the method call maximum(3, 4, 5) is executed in the provided code, what type is inferred for the type parameter T?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": null,
-    "source_pages": [
-      11,
-      2,
-      3,
-      10
-    ],
-    "verdict": "Correct",
-    "reason": "The source code shows a generic method maximum that is called with integer literals, so the compiler infers T as Integer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "In the generic method maximum defined in the provided code, why is the type parameter declared as >?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": null,
-    "source_pages": [
-      11,
-      2,
-      3,
-      10
-    ],
-    "verdict": "Correct",
-    "reason": "The source text shows the generic method declared with <T extends Comparable<T>>, which enables comparison of T objects, matching the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "Which of the following declarations correctly creates an ArrayList that can store double values in Java?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": null,
-    "source_pages": [
-      11,
-      2,
-      3,
-      10
-    ],
-    "verdict": "Incorrect",
-    "reason": "The source text states that a primitive type cannot be used as a type parameter and that ArrayList<Double> must be used to store double values. The marked answer uses a raw ArrayList, which is not the correct declaration for storing Double objects.",
-    "supported_by_source": true
-  },
-  {
-    "question": "Which of the following statements correctly describes the generic method 'maximum' presented in the program?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": null,
-    "source_pages": [
-      11,
-      2,
-      3,
-      10
-    ],
-    "verdict": "Correct",
-    "reason": "The source text shows the method signature public static < T extends Comparable< T > > T maximum( T x, T y, T z ), confirming that the type parameter is bounded by Comparable, matching the marked answer.",
-    "supported_by_source": true
-  },
-  {
-    "question": "In the generic method maximum> T maximum(T x, T y, T z), why is the bound T extends Comparable required?",
-    "question_type": "MCQ",
-    "topic": "oop",
-    "learning_objective": null,
-    "source_pages": [
-      11,
-      2,
-      3,
-      10
-    ],
-    "verdict": "Correct",
-    "reason": "The source text explicitly shows the generic method declared with <T extends Comparable<T>> and uses y.compareTo(max) and z.compareTo(max), indicating the bound is needed to allow comparison.",
-    "supported_by_source": true
+    "verdict": "Not evaluated",
+    "reason": "validation failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m07myqtresptvtddqjtwxhce` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198980, Requested 1512. Please try again in 3m32.543999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+    "supported_by_source": false
   }
 ]

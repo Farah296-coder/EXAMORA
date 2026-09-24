@@ -45,6 +45,51 @@ EXTRACTED_JSON_PATH = os.path.join(
     "extracted_text.json"
 )
 
+EXAM_SETTINGS_PATH = os.path.join(
+    OUTPUT_DIR,
+    "exam_settings.json"
+)
+
+GENERATED_EXAM_PATH = os.path.join(
+    OUTPUT_DIR,
+    "generated_exam.json"
+)
+
+QUALITY_RESULTS_PATH = os.path.join(
+    OUTPUT_DIR,
+    "quality_score_results.json"
+)
+
+GROUNDING_RESULTS_PATH = os.path.join(
+    OUTPUT_DIR,
+    "grounding_results.json"
+)
+
+
+# ============================================================
+# QUESTION TYPE NORMALIZATION
+# ============================================================
+# The exam settings UI uses "True/False".
+# The generation pipeline expects "True-False".
+# ============================================================
+
+TRUE_FALSE_ALIASES = (
+    "true/false",
+    "true false",
+    "true_false",
+    "true-false",
+    "t/f",
+    "tf",
+)
+
+
+def to_generation_type(question_type):
+
+    if str(question_type).strip().lower() in TRUE_FALSE_ALIASES:
+        return "True-False"
+
+    return question_type
+
 
 os.makedirs(
     DATA_DIR,
@@ -493,7 +538,8 @@ def create_exam_settings(
     )
 
     exam_settings.save_exam_settings(
-        settings
+        settings,
+        EXAM_SETTINGS_PATH
     )
 
     return ok(
@@ -542,7 +588,8 @@ def generate_exam_endpoint(
         )
 
         exam_settings.save_exam_settings(
-            settings
+            settings,
+            EXAM_SETTINGS_PATH
         )
 
     # --------------------------------------------------------
@@ -563,6 +610,12 @@ def generate_exam_endpoint(
         )
     )
 
+    for request in requests:
+
+        request["question_type"] = to_generation_type(
+            request["question_type"]
+        )
+
     # --------------------------------------------------------
     # 4. Generate exam
     # --------------------------------------------------------
@@ -576,7 +629,8 @@ def generate_exam_endpoint(
     # --------------------------------------------------------
 
     generation.save_exam(
-        exam
+        exam,
+        GENERATED_EXAM_PATH
     )
 
     # --------------------------------------------------------
@@ -616,7 +670,9 @@ def quality_score_endpoint(
     else:
 
         questions = (
-            quality_score.load_questions()
+            quality_score.load_questions(
+                GENERATED_EXAM_PATH
+            )
         )
 
     results = (
@@ -626,7 +682,8 @@ def quality_score_endpoint(
     )
 
     quality_score.save_results(
-        results
+        results,
+        QUALITY_RESULTS_PATH
     )
 
     return ok(
@@ -672,7 +729,9 @@ def validate_endpoint(
     else:
 
         questions = (
-            grounding_validation.load_questions()
+            grounding_validation.load_questions(
+                GENERATED_EXAM_PATH
+            )
         )
 
     # --------------------------------------------------------
@@ -680,7 +739,9 @@ def validate_endpoint(
     # --------------------------------------------------------
 
     pages_by_number = (
-        grounding_validation.load_source_pages()
+        grounding_validation.load_source_pages(
+            EXTRACTED_JSON_PATH
+        )
     )
 
     # --------------------------------------------------------
@@ -699,7 +760,8 @@ def validate_endpoint(
     # --------------------------------------------------------
 
     grounding_validation.save_results(
-        results
+        results,
+        GROUNDING_RESULTS_PATH
     )
 
     return ok(

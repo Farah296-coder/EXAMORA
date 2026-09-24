@@ -1,13 +1,48 @@
 import json
 import os
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 from openai import OpenAI
 
 _client = OpenAI(
-    api_key=os.environ["GROQ_API_KEY"],
+    api_key=os.environ.get("GROQ_API_KEY", ""),
     base_url="https://api.groq.com/openai/v1",
 )
 
 LLM_MODEL = "openai/gpt-oss-20b"
+
+MAX_WORKERS = 4
+LLM_ATTEMPTS = 2
+MAX_OUTPUT_TOKENS = 500
+
+_fast_mode = True
+
+
+def fast_completion(messages, temperature, max_tokens=MAX_OUTPUT_TOKENS):
+    global _fast_mode
+
+    if _fast_mode:
+        try:
+            return _client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body={"reasoning_effort": "low"},
+            )
+        except Exception as e:
+            text = str(e).lower()
+            if "rate" in text or "429" in text or "timeout" in text:
+                raise
+            _fast_mode = False
+
+    return _client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
 
 
 def load_questions(path="output/generated_exam.json"):
@@ -70,15 +105,23 @@ Respond with STRICT JSON ONLY (no extra text, no markdown fences), in exactly th
 
 
 def call_llm(prompt):
-    response = _client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=[
-            {"role": "system", "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
-    return response.choices[0].message.content
+    last_error = None
+
+    messages = [
+        {"role": "system", "content": "You always respond with strict, valid JSON only. No markdown fences, no extra commentary."},
+        {"role": "user", "content": prompt},
+    ]
+
+    for attempt in range(LLM_ATTEMPTS):
+        try:
+            response = fast_completion(messages, 0.2)
+            return response.choices[0].message.content
+        except Exception as e:
+            last_error = e
+            if attempt + 1 < LLM_ATTEMPTS:
+                time.sleep(2 * (attempt + 1))
+
+    raise last_error
 
 
 def parse_response(raw_output):
@@ -115,18 +158,36 @@ def validate_question(question_data, pages_by_number):
     }
 
 
+def validate_one_safely(question_data, pages_by_number):
+    try:
+        return validate_question(question_data, pages_by_number)
+    except Exception as e:
+        return {
+            "question": question_data.get("question"),
+            "question_type": question_data.get("question_type"),
+            "topic": question_data.get("topic"),
+            "learning_objective": question_data.get("learning_objective"),
+            "source_pages": question_data.get("source_pages") or [],
+            "verdict": "Not evaluated",
+            "reason": f"validation failed: {e}",
+            "supported_by_source": False,
+        }
+
+
 def validate_exam(questions, pages_by_number):
-    results = []
+    print(f"Validating {len(questions)} questions ({MAX_WORKERS} at a time)...")
 
-    for i, question_data in enumerate(questions, start=1):
-        print(f"[{i}/{len(questions)}] Validating: {question_data.get('question')!r}")
+    def validate(question_data):
+        return validate_one_safely(question_data, pages_by_number)
 
-        try:
-            result = validate_question(question_data, pages_by_number)
-            results.append(result)
-            print(f"  -> verdict={result['verdict']}")
-        except Exception as e:
-            print(f"  Skipped -- failed to validate this one: {e}")
+    if len(questions) <= 1:
+        results = [validate(question) for question in questions]
+    else:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+            results = list(pool.map(validate, questions))
+
+    for i, result in enumerate(results, start=1):
+        print(f"[{i}/{len(results)}] verdict={result['verdict']} :: {result['question']!r}")
 
     return results
 
